@@ -20,6 +20,9 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
     protected List<Article> doInBackground(Void... voids) {
         List<Article> res = null;
 		//ModelManager uses singleton pattern, connecting once per app execution in enough
+        String strIdUser = ModelManager.getLoggedIdUSer();
+        String strApiKey = ModelManager.getLoggedApiKey();
+        String strIdAuthUser = ModelManager.getLoggedAuthType();
         if (!ModelManager.isConnected()){
 			// if it is the first login
             if (strIdUser==null || strIdUser.equals("")) {
@@ -41,7 +44,7 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
                 res = ModelManager.getArticles(6, 0);
                 for (Article article : res) {
 					// We print articles in Log
-                    Log.i(TAG, article);
+                    Log.i(TAG, String.valueOf(article));
                 }
             } catch (ServerCommunicationError e) {
                 Log.e(TAG,e.getMessage());
