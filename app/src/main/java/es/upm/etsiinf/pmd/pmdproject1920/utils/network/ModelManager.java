@@ -19,7 +19,8 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunic
 import static es.upm.etsiinf.pmd.pmdproject1920.utils.network.ServiceCallUtils.parseHttpStreamResult;
 
 public class ModelManager {
-    private static RESTConnection rc = null;
+
+    private static RESTConnection rc = new RESTConnection("https://sanger.dia.fi.upm.es/pmd-task/",true);
 
     public static boolean isConnected(){
         return rc.idUser!=null;
@@ -37,14 +38,7 @@ public class ModelManager {
         return rc.authType;
     }
 
-    /**
-     *
-     * @param ini Initializes entity manager urls and users
-     * @throws AuthenticationError
-     */
-    public static void configureConnection(Properties ini)  {
-        rc = new RESTConnection(ini);
-    }
+
 
     public static void stayloggedin(String idUser, String apikey, String authType) {
         rc.idUser = idUser;

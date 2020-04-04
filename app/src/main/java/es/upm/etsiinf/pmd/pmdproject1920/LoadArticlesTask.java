@@ -27,7 +27,7 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
 			// if it is the first login
             if (strIdUser==null || strIdUser.equals("")) {
                 try {
-                    ModelManager.login("ws_user", "ws_password");
+                    ModelManager.login("DEV_TEAM_14", "54655");
                 } catch (AuthenticationError e) {
                     Log.e(TAG, e.getMessage());
                 }

@@ -10,6 +10,12 @@ public class RESTConnection {
     protected String authType;
     protected String apikey;
 
+    public RESTConnection(String serviceUrl, boolean requireSelfSigned) {
+        this.serviceUrl = serviceUrl;
+        this.requireSelfSigned =requireSelfSigned;
+    }
+
+
     public void clear(){
         idUser = null;
         authType = null;
@@ -18,12 +24,12 @@ public class RESTConnection {
 
     protected boolean isAdministrator = false;
 
-    protected String serviceUrl ;
+    protected String serviceUrl;
 
-    protected boolean requireSelfSigned = false;
+    protected boolean requireSelfSigned;
 
-    public static final String ATTR_LOGIN_USER = "username";
-    public static final String ATTR_LOGIN_PASS = "password";
+    public static final String ATTR_LOGIN_USER = "";
+    public static final String ATTR_LOGIN_PASS = "";
     public static final String ATTR_SERVICE_URL = "service_url";
     public static final String ATTR_REQUIRE_SELF_CERT = "require_self_signed_cert";
     public static final String ATTR_PROXY_HOST = "";
