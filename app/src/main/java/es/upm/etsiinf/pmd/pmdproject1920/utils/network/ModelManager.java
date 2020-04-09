@@ -80,6 +80,7 @@ public class ModelManager {
 
             int HttpResult =connection.getResponseCode();
             if(HttpResult ==HttpURLConnection.HTTP_OK){
+                Logger.log(Logger.INFO, "HttpURLConnection response code -> " + HttpResult);
                 res = parseHttpStreamResult(connection);
 
                 JSONObject userJsonObject = ServiceCallUtils.readRestResultFromSingle(res);
