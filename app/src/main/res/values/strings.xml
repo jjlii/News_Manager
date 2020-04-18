@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NewsManager</string>
+    <string name="news_title">News Title</string>
+    <string name="news_subtitle">News Subtitle</string>
+    <string name="news_abstract">News Abstract</string>
+    <string name="category">Category</string>
 </resources>
