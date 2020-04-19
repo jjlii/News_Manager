@@ -41,7 +41,7 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
         if (ModelManager.isConnected()) {
             try {
 				// obtain 6 articles from offset 0
-                res = ModelManager.getArticles(6, 0);
+                res = ModelManager.getArticles(20, 0);
                 for (Article article : res) {
 					// We print articles in Log
                     Log.i(TAG, String.valueOf(article));
