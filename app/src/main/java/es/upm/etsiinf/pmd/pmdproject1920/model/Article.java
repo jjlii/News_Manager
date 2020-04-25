@@ -129,6 +129,14 @@ public class Article extends ModelEntity {
 		mainImage= img;
 		return img;
 	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 	
 	@Override
 	public String toString() {
