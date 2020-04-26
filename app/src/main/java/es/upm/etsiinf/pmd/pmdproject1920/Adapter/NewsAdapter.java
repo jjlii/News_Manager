@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import es.upm.etsiinf.pmd.pmdproject1920.R;
@@ -26,9 +24,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     private OnItemClickListener onItemClickListener;
 
 
-    public NewsAdapter(List<Article> articles, Context context) {
+    public NewsAdapter(List<Article> articles, Context context, OnItemClickListener onItemClickListener) {
         this.articles = articles;
         this.context = context;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -57,7 +56,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
-
     }
 
     public interface OnItemClickListener{

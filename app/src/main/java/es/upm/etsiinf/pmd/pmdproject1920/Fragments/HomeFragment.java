@@ -3,6 +3,7 @@ package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,7 @@ public class HomeFragment extends Fragment {
         }
         setVisible();
         showRecyclerView();
-    }
+    }   
 
     private void setVisible(){
         progressBar.setVisibility(View.GONE);
@@ -60,7 +62,12 @@ public class HomeFragment extends Fragment {
     private void showRecyclerView(){
         layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
-        adapter = new NewsAdapter(articles, getActivity());
+        adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Navigation.findNavController(view).navigate(R.id.action_home_to_article_detail);
+            }
+        });
         rv.setAdapter(adapter);
     }
 }

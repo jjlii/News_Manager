@@ -11,6 +11,16 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.HomeFragment"
         tools:layout="@layout/fragment_home">
 
+        <action
+            android:id="@+id/action_home_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/article_detail_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.ArticleDetailsFragment"
+        tools:layout="@layout/fragment_article_details">
+
     </fragment>
 
 
