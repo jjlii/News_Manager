@@ -29,13 +29,8 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunic
 public class ArticleDetailsFragment extends Fragment {
 
     private ImageView iv_detail_img;
-    private TextView tv_category_detail;
-    private TextView tv_title_detail;
-    private TextView tv_subtitle_detail;
-    private TextView tv_abstract_detail;
-    private TextView tv_body_detail;
-    private TextView tv_author_value;
-    private TextView tv_date_value;
+    private TextView tv_category_detail, tv_title_detail, tv_subtitle_detail, tv_abstract_detail,
+            tv_body_detail, tv_author_value, tv_date_value;
     private Article article;
     private ProgressBar progressBar;
     private ScrollView article_detail_container;

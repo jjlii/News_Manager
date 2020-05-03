@@ -10,4 +10,7 @@
     <string name="news_body">News Body</string>
     <string name="author">Author</string>
     <string name="publish_date">Publish date</string>
+    <string name="log_in">LOG IN</string>
+    <string name="user">User</string>
+    <string name="password">Password</string>
 </resources>
