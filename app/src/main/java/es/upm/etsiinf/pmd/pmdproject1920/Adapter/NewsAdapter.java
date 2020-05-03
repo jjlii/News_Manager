@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import es.upm.etsiinf.pmd.pmdproject1920.R;
@@ -26,9 +24,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     private OnItemClickListener onItemClickListener;
 
 
-    public NewsAdapter(List<Article> articles, Context context) {
+    public NewsAdapter(List<Article> articles, Context context, OnItemClickListener onItemClickListener) {
         this.articles = articles;
         this.context = context;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -43,7 +42,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         final  MyViewHolder holder = holders;
         Article article  = articles.get(position);
         holder.news_title.setText(article.getTitleText());
-        holder.news_subtitle.setText(article.getSubtitleText());
         holder.news_abstract.setText(article.getAbstractText());
         holder.news_category.setText(article.getCategory());
         Bitmap img = SerializationUtils.base64StringToImg(article.getThumbnail());
@@ -57,7 +55,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
-
     }
 
     public interface OnItemClickListener{
@@ -66,14 +63,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
     public class  MyViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView news_title, news_subtitle, news_abstract, news_category ;
+        TextView news_title, news_abstract, news_category ;
         ImageView imageView;
         OnItemClickListener onItemClickListener;
         public MyViewHolder( View itemView, OnItemClickListener onItemClickListener){
             super(itemView);
             itemView.setOnClickListener(this);
             news_title = itemView.findViewById(R.id.tv_title);
-            news_subtitle = itemView.findViewById(R.id.tv_subtitle);
             news_abstract = itemView.findViewById(R.id.tv_abstract);
             news_category = itemView.findViewById(R.id.tv_category);
             imageView = itemView.findViewById(R.id.iv_image);

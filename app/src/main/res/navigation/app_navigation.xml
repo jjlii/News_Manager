@@ -11,7 +11,39 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.HomeFragment"
         tools:layout="@layout/fragment_home">
 
+        <action
+            android:id="@+id/action_home_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+
+        <action
+            android:id="@+id/action_home_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
     </fragment>
+
+    <fragment
+        android:id="@+id/article_detail_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.ArticleDetailsFragment"
+        tools:layout="@layout/fragment_article_details">
+
+        <argument
+            android:name="articleId"
+            app:argType="integer"
+            app:nullable="false"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/log_in_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.LogInFragment"
+        tools:layout="@layout/fragment_log_in">
+
+    </fragment>
+
+
+
+
+
 
 
 </navigation>

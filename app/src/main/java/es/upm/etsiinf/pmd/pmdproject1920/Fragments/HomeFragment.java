@@ -11,14 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
-import es.upm.etsiinf.pmd.pmdproject1920.LoadArticlesTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+
+import static androidx.navigation.Navigation.findNavController;
 
 
 public class HomeFragment extends Fragment {
@@ -43,9 +46,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             articles = new LoadArticlesTask().execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         setVisible();
@@ -60,7 +61,12 @@ public class HomeFragment extends Fragment {
     private void showRecyclerView(){
         layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
-        adapter = new NewsAdapter(articles, getActivity());
+        adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                findNavController(view).navigate(HomeFragmentDirections.actionHomeToArticleDetail(articles.get(position).getId()));
+            }
+        });
         rv.setAdapter(adapter);
     }
 }
