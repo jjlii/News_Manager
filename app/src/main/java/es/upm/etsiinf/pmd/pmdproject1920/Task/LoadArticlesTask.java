@@ -1,15 +1,12 @@
-package es.upm.etsiinf.pmd.pmdproject1920;
+package es.upm.etsiinf.pmd.pmdproject1920.Task;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
-import java.util.Properties;
 
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
-import es.upm.etsiinf.pmd.pmdproject1920.utils.network.RESTConnection;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.AuthenticationError;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
 public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {

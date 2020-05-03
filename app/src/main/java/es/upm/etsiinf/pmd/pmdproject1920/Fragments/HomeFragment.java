@@ -3,7 +3,6 @@ package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,16 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
-import es.upm.etsiinf.pmd.pmdproject1920.LoadArticlesTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+
+import static androidx.navigation.Navigation.findNavController;
 
 
 public class HomeFragment extends Fragment {
@@ -52,7 +54,7 @@ public class HomeFragment extends Fragment {
         }
         setVisible();
         showRecyclerView();
-    }   
+    }
 
     private void setVisible(){
         progressBar.setVisibility(View.GONE);
@@ -65,7 +67,7 @@ public class HomeFragment extends Fragment {
         adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Navigation.findNavController(view).navigate(R.id.action_home_to_article_detail);
+                findNavController(view).navigate(HomeFragmentDirections.actionHomeToArticleDetail(articles.get(position).getId()));
             }
         });
         rv.setAdapter(adapter);

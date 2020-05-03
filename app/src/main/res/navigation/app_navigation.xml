@@ -21,6 +21,11 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.ArticleDetailsFragment"
         tools:layout="@layout/fragment_article_details">
 
+        <argument
+            android:name="articleId"
+            app:argType="integer"
+            app:nullable="false"/>
+
     </fragment>
 
 
