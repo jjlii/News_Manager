@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/categories">
+        <menu>
+            <item android:id="@+id/nav_all"
+                android:icon="@drawable/ic_all_24dp"
+                android:title="@string/all_categories"/>
+            <item android:id="@+id/nav_national"
+                android:icon="@drawable/ic_national_24dp"
+                android:title="@string/national"/>
+            <item android:id="@+id/nav_economy"
+                android:icon="@drawable/ic_economy_24dp"
+                android:title="@string/economy"/>
+            <item android:id="@+id/nav_sport"
+                android:icon="@drawable/ic_sport_24dp"
+                android:title="@string/sport"/>
+            <item android:id="@+id/nav_tech"
+                android:icon="@drawable/ic_tech_24dp"
+                android:title="@string/technology"/>
+        </menu>
+
+    </item>
+
+
+
+
+</menu>

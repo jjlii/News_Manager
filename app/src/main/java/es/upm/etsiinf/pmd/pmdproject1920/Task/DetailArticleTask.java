@@ -1,11 +1,6 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Task;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
-import java.util.List;
-
-import es.upm.etsiinf.pmd.pmdproject1920.Fragments.ArticleDetailsFragmentArgs;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
