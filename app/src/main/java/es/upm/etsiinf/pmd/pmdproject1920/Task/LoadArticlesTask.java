@@ -9,12 +9,12 @@ import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.AuthenticationError;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
-public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
+public class LoadArticlesTask extends AsyncTask<List<String>, Void, List<Article>> {
     
 	private static final String TAG = "LoadArticlesTask";
     
 	@Override
-    protected List<Article> doInBackground(Void... voids) {
+    protected List<Article> doInBackground(List<String>... credentials) {
         List<Article> res = null;
 		//ModelManager uses singleton pattern, connecting once per app execution in enough
         String strIdUser = ModelManager.getLoggedIdUSer();
@@ -24,7 +24,7 @@ public class LoadArticlesTask extends AsyncTask<Void, Void, List<Article>> {
 			// if it is the first login
             if (strIdUser==null || strIdUser.equals("")) {
                 try {
-                    ModelManager.login("DEV_TEAM_24", "24240");
+                    ModelManager.login(credentials[0].get(0),credentials[0].get(1));
                 } catch (AuthenticationError e) {
                     Log.e(TAG, e.getMessage());
                 }
