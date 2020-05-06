@@ -31,6 +31,7 @@ public class NationalFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MainActivity)getActivity()).setVisibility(View.VISIBLE);
         articles = ((MainActivity)getActivity()).filterArticles("National");
         showRecyclerView();
     }
@@ -50,7 +51,7 @@ public class NationalFragment extends Fragment {
         adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                findNavController(view).navigate(HomeFragmentDirections.actionHomeToArticleDetail(articles.get(position).getId()));
+                findNavController(view).navigate(NationalFragmentDirections.actionNationalToArticleDetail(articles.get(position).getId()));
             }
         });
         rv.setAdapter(adapter);
