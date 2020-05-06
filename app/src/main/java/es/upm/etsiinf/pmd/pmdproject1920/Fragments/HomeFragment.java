@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
+import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
@@ -40,15 +42,16 @@ public class HomeFragment extends Fragment {
     private NewsAdapter adapter;
     private FloatingActionButton fb_login;
     private String user, pwd;
-
+    private View fragmentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        rv = view.findViewById(R.id.rv_news);
-        progressBar = view.findViewById(R.id.progress);
-        fb_login = view.findViewById(R.id.fb_login);
-        return view;
+        ((MainActivity)getActivity()).setVisibility(View.VISIBLE);
+        fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
+        rv = fragmentView.findViewById(R.id.rv_news);
+        progressBar = fragmentView.findViewById(R.id.progress);
+        fb_login = getActivity().findViewById(R.id.fb_login);
+        return fragmentView;
     }
 
     @Override
@@ -63,6 +66,7 @@ public class HomeFragment extends Fragment {
                 credentials.add(0,user);
                 credentials.add(1,pwd);
                 articles = new LoadArticlesTask().execute(credentials).get();
+                ((MainActivity)getActivity()).setArticles(articles);
             }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -70,7 +74,7 @@ public class HomeFragment extends Fragment {
         fb_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findNavController(v).navigate(HomeFragmentDirections.actionHomeToLogIn());
+                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogIn());
             }
         });
         setVisible();

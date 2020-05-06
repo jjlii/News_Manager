@@ -13,15 +13,13 @@
     <string name="log_in">LOG IN</string>
     <string name="user">User</string>
     <string name="password">Password</string>
-    <string name="all_categories">All categories</string>
     <string name="national">National</string>
     <string name="economy">Economy</string>
-    <string name="sport">Sport</string>
+    <string name="sport">Sports</string>
     <string name="technology">Technology</string>
     <string name="categories">Categories</string>
     <string name="user_name">User name</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="account">Account</string>
     <string name="remember_me">Remember me</string>
+    <string name="home">Home</string>
 </resources>

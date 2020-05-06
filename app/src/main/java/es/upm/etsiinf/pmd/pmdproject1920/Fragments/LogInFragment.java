@@ -1,5 +1,6 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.CheckBox;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 
 public class LogInFragment extends Fragment {
@@ -34,6 +36,7 @@ public class LogInFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MainActivity)getActivity()).setVisibility(View.GONE);
         View view = inflater.inflate(R.layout.fragment_log_in, container, false);
         et_user = view.findViewById(R.id.et_user);
         et_pwd = view.findViewById(R.id.et_pwd);
