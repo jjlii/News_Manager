@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +26,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -46,7 +46,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).setVisibility(View.VISIBLE);
         fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
         rv = fragmentView.findViewById(R.id.rv_news);
         progressBar = fragmentView.findViewById(R.id.progress);
@@ -68,6 +67,7 @@ public class HomeFragment extends Fragment {
                 articles = new LoadArticlesTask().execute(credentials).get();
                 ((MainActivity)getActivity()).setArticles(articles);
             }
+            ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

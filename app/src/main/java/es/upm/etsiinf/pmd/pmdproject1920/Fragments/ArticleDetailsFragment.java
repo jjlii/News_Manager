@@ -66,7 +66,7 @@ public class ArticleDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).setVisibility(View.GONE);
+        ((MainActivity)getActivity()).setVisibility(View.GONE,ModelManager.isConnected());
         View view = inflater.inflate(R.layout.fragment_article_details, container, false);
         iv_detail_img = view.findViewById(R.id.iv_detail_img);
         tv_category_detail = view.findViewById(R.id.tv_category_detail);

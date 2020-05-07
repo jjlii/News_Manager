@@ -22,4 +22,7 @@
     <string name="account">Account</string>
     <string name="remember_me">Remember me</string>
     <string name="home">Home</string>
+    <string name="edit_news">Edit News</string>
+    <string name="log_out">Log Out</string>
+    <string name="create_news">Create News</string>
 </resources>

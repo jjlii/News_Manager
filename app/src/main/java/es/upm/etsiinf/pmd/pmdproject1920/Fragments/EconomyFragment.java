@@ -17,6 +17,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -31,7 +32,7 @@ public class EconomyFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity)getActivity()).setVisibility(View.VISIBLE);
+        ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
         articles = ((MainActivity)getActivity()).filterArticles("Economy");
         showRecyclerView();
     }
