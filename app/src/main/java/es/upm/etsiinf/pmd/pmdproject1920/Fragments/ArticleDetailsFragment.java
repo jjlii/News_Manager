@@ -1,6 +1,7 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +59,11 @@ public class ArticleDetailsFragment extends Fragment {
         tv_title_detail.setText(article.getTitleText());
         tv_subtitle_detail.setText(article.getSubtitleText());
         tv_abstract_detail.setText(article.getAbstractText());
-        tv_body_detail.setText(article.getBodyText());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tv_body_detail.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+        }else {
+            tv_body_detail.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
+        }
         tv_author_value.setText(Integer.toString(article.getIdUser()));
         tv_date_value.setText(article.getLastUpdate().toString());
         setVisible();
