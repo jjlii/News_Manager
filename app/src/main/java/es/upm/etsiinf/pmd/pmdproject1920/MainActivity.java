@@ -47,17 +47,6 @@ public class MainActivity extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottom_navigation, navController);
-        // galeria
-        setContentView(R.layout.activity_main);
-        imageView = (ImageView)findViewById(R.id.imageView);
-        button = (Button)findViewById(R.id.ly_buttonLoadPicture);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
-        //
         fb_create = findViewById(R.id.fb_create);
         fb_edit = findViewById(R.id.fb_edit);
         fb_log_out = findViewById(R.id.fb_log_out);
@@ -170,22 +159,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return res;
-    }
-    // Galeria
-    ImageView imageView;
-    Button button;
-    private static final int PICK_IMAGE = 100;
-    Uri imageUri;
-    private void openGallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
-            imageUri = data.getData();
-            imageView.setImageURI(imageUri);
-        }
     }
 }
