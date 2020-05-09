@@ -86,6 +86,32 @@
 
             </FrameLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_rm"
+                app:cornerRadius="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tv_abstract"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:icon="@drawable/ic_rm_button_24dp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tv_abstract"
+                app:layout_constraintEnd_toStartOf="@id/bt_rm"
+                app:cornerRadius="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_edit_black_24dp"
+                />
+            
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
