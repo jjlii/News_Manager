@@ -25,4 +25,12 @@
     <string name="edit_news">Edit News</string>
     <string name="log_out">Log Out</string>
     <string name="create_news">Create News</string>
+    <string name="select_image">Select Image</string>
+    <string-array name="categories">
+        <item>Select Category</item>
+        <item>Economy</item>
+        <item>National</item>
+        <item>Sports</item>
+        <item>Technology</item>
+    </string-array>
 </resources>
