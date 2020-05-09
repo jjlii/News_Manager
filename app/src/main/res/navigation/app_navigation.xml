@@ -14,10 +14,13 @@
         <action
             android:id="@+id/action_home_to_article_detail"
             app:destination="@id/article_detail_screen"/>
-
         <action
             android:id="@+id/action_home_to_log_in"
             app:destination="@id/log_in_screen"
+            />
+        <action
+            android:id="@+id/action_home_to_edit_article"
+            app:destination="@id/edit_article_screen"
             />
     </fragment>
 
@@ -53,6 +56,10 @@
             android:id="@+id/action_eco_to_log_in"
             app:destination="@id/log_in_screen"
             />
+        <action
+            android:id="@+id/action_economy_to_edit_article"
+            app:destination="@id/edit_article_screen"
+            />
     </fragment>
     <fragment
         android:id="@+id/sport_screen"
@@ -66,6 +73,10 @@
         <action
             android:id="@+id/action_sport_to_log_in"
             app:destination="@id/log_in_screen"
+            />
+        <action
+            android:id="@+id/action_sport_to_edit_article"
+            app:destination="@id/edit_article_screen"
             />
     </fragment>
     <fragment
@@ -81,20 +92,35 @@
             android:id="@+id/action_national_to_log_in"
             app:destination="@id/log_in_screen"
             />
+        <action
+            android:id="@+id/action_national_to_edit_article"
+            app:destination="@id/edit_article_screen"
+            />
     </fragment>
     <fragment
-        android:id="@+id/technology_screen"
-        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.TechnologyFragment"
-        android:label="fragment_technology"
-        tools:layout="@layout/fragment_technology" >
-        <action
-            android:id="@+id/action_tech_to_article_detail"
-            app:destination="@id/article_detail_screen"/>
+    android:id="@+id/technology_screen"
+    android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.TechnologyFragment"
+    android:label="fragment_technology"
+    tools:layout="@layout/fragment_technology" >
+    <action
+        android:id="@+id/action_tech_to_article_detail"
+        app:destination="@id/article_detail_screen"/>
 
-        <action
-            android:id="@+id/action_tech_to_log_in"
-            app:destination="@id/log_in_screen"
-            />
+    <action
+        android:id="@+id/action_tech_to_log_in"
+        app:destination="@id/log_in_screen"
+        />
+    <action
+        android:id="@+id/action_technology_to_edit_article"
+        app:destination="@id/edit_article_screen"
+        />
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_article_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.EditArticleFragment"
+        android:label="fragment_edit_article"
+        tools:layout="@layout/fragment_edit_article" >
     </fragment>
 
 

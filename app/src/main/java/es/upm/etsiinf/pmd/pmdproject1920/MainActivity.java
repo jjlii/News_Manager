@@ -3,10 +3,15 @@ package es.upm.etsiinf.pmd.pmdproject1920;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottom_navigation, navController);
-
         fb_create = findViewById(R.id.fb_create);
         fb_log_out = findViewById(R.id.fb_log_out);
         fb_action = findViewById(R.id.fb_action);
