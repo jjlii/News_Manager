@@ -1,5 +1,7 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +32,23 @@ public class NationalFragment extends Fragment {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private NewsAdapter adapter;
+    private FloatingActionButton fb_create, fb_log_out;
+    private View fragmentView;
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
         articles = ((MainActivity)getActivity()).filterArticles("National");
+        fb_create = getActivity().findViewById(R.id.fb_create);
+        fb_log_out = getActivity().findViewById(R.id.fb_log_out);
+        fb_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Navigate to to create news
+            }
+        });
         showRecyclerView();
     }
 
@@ -41,9 +56,9 @@ public class NationalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_national, container, false);
-        rv = view.findViewById(R.id.rv_national);
-        return view;
+        fragmentView = inflater.inflate(R.layout.fragment_national, container, false);
+        rv = fragmentView.findViewById(R.id.rv_national);
+        return fragmentView;
     }
 
     private void showRecyclerView(){

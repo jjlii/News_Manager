@@ -3,10 +3,13 @@ package es.upm.etsiinf.pmd.pmdproject1920;
 
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -52,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         fb_action = findViewById(R.id.fb_action);
         tv_create = findViewById(R.id.tv_create);
         tv_log_out = findViewById(R.id.tv_log_out);
-        bottom_navigation = findViewById(R.id.bottom_navigation);
         fb_login = findViewById(R.id.fb_login);
         rl_fb_action = findViewById(R.id.rl_fb_action);
 
@@ -93,29 +95,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fb_create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(getApplicationContext(), "Create News", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
         fb_log_out.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
-                Toast.makeText(getApplicationContext(), "Log Out", Toast.LENGTH_SHORT).show();
-
+            public void onClick(View v) {
+                getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction("com.package.ACTION_LOGOUT");
+                sendBroadcast(broadcastIntent);
             }
         });
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.package.ACTION_LOGOUT");
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("onReceive","Logout in progress");
+                //At this point you should start the login activity and finish this one
+                finish();
+            }
+        }, intentFilter);
 
     }
 
     @SuppressLint("RestrictedApi")
     public void setVisibility(int visibility, boolean menuVisibility){
         bottom_navigation.setVisibility(visibility);
+        fb_login.setVisibility(visibility);
         rl_fb_action.setVisibility(visibility);
         if (visibility == View.VISIBLE){
             setMenuVisibility(menuVisibility);

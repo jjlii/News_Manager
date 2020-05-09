@@ -21,6 +21,8 @@ import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 
+import static androidx.navigation.Navigation.findNavController;
+
 public class LogInFragment extends Fragment {
 
     private SharedPreferences preferences;
@@ -61,6 +63,9 @@ public class LogInFragment extends Fragment {
                 }else {
                     preferences.edit().clear().apply();
                 }
+
+                findNavController(v).navigate(LogInFragmentDirections.actionLogInToHome());
+
             }
         });
     }

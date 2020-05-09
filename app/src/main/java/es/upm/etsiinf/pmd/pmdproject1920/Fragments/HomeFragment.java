@@ -2,6 +2,7 @@ package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment {
     private List<Article> articles = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private NewsAdapter adapter;
-    private FloatingActionButton fb_login;
+    private FloatingActionButton fb_login, fb_create, fb_log_out;
     private String user, pwd;
     private View fragmentView;
 
@@ -50,6 +51,8 @@ public class HomeFragment extends Fragment {
         rv = fragmentView.findViewById(R.id.rv_news);
         progressBar = fragmentView.findViewById(R.id.progress);
         fb_login = getActivity().findViewById(R.id.fb_login);
+        fb_create = getActivity().findViewById(R.id.fb_create);
+        fb_log_out = getActivity().findViewById(R.id.fb_log_out);
         return fragmentView;
     }
 
@@ -57,24 +60,17 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getPreferencesData();
-        try {
-            if(null==user || null==pwd ){
-                articles = new AllArticlesTask().execute().get();
-            }else {
-                List<String> credentials = new ArrayList<>();
-                credentials.add(0,user);
-                credentials.add(1,pwd);
-                articles = new LoadArticlesTask().execute(credentials).get();
-                ((MainActivity)getActivity()).setArticles(articles);
-            }
-            ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        getArticles();
         fb_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogIn());
+            }
+        });
+        fb_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Navigate to to create news
             }
         });
         setVisible();
@@ -98,14 +94,26 @@ public class HomeFragment extends Fragment {
         rv.setAdapter(adapter);
     }
 
+    private void getArticles(){
+        try {
+            if(null==user || null==pwd ){
+                articles = new AllArticlesTask().execute().get();
+            }else {
+                List<String> credentials = new ArrayList<>();
+                credentials.add(0,user);
+                credentials.add(1,pwd);
+                articles = new LoadArticlesTask().execute(credentials).get();
+            }
+            ((MainActivity)getActivity()).setArticles(articles);
+            ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void getPreferencesData(){
         preferences = getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE);
-        if (preferences.contains("pref_pwd")){
-            user = preferences.getString("pref_user", null);
-        }
-        if (preferences.contains("pref_pwd")){
-            pwd =  preferences.getString("pref_pwd", null);
-        }
-
+        user = preferences.getString("pref_user", null);
+        pwd =  preferences.getString("pref_pwd", null);
     }
 }

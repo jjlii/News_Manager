@@ -22,6 +22,11 @@
             android:id="@+id/action_home_to_edit_article"
             app:destination="@id/edit_article_screen"
             />
+
+        <action
+            android:id="@+id/action_home_to_home"
+            app:destination="@id/home_screen"/>
+
     </fragment>
 
     <fragment
@@ -41,6 +46,10 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.LogInFragment"
         tools:layout="@layout/fragment_log_in">
 
+        <action
+            android:id="@+id/action_log_in_to_home"
+            app:destination="@id/home_screen"/>
+
     </fragment>
 
     <fragment
@@ -48,6 +57,7 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.EconomyFragment"
         android:label="fragment_economy"
         tools:layout="@layout/fragment_economy" >
+
         <action
             android:id="@+id/action_eco_to_article_detail"
             app:destination="@id/article_detail_screen"/>
@@ -60,12 +70,19 @@
             android:id="@+id/action_economy_to_edit_article"
             app:destination="@id/edit_article_screen"
             />
+
+        <action
+            android:id="@+id/action_eco_to_home"
+            app:destination="@id/home_screen"/>
+
     </fragment>
+
     <fragment
         android:id="@+id/sport_screen"
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.SportFragment"
         android:label="fragment_sport"
         tools:layout="@layout/fragment_sport" >
+
         <action
             android:id="@+id/action_sport_to_article_detail"
             app:destination="@id/article_detail_screen"/>
@@ -78,12 +95,19 @@
             android:id="@+id/action_sport_to_edit_article"
             app:destination="@id/edit_article_screen"
             />
+
+        <action
+            android:id="@+id/action_sport_to_home"
+            app:destination="@id/home_screen"/>
+
     </fragment>
+
     <fragment
         android:id="@+id/national_screen"
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.NationalFragment"
         android:label="fragment_national"
         tools:layout="@layout/fragment_national" >
+
         <action
             android:id="@+id/action_national_to_article_detail"
             app:destination="@id/article_detail_screen"/>
@@ -96,21 +120,33 @@
             android:id="@+id/action_national_to_edit_article"
             app:destination="@id/edit_article_screen"
             />
-    </fragment>
-    <fragment
-    android:id="@+id/technology_screen"
-    android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.TechnologyFragment"
-    android:label="fragment_technology"
-    tools:layout="@layout/fragment_technology" >
-    <action
-        android:id="@+id/action_tech_to_article_detail"
-        app:destination="@id/article_detail_screen"/>
 
-    <action
-        android:id="@+id/action_tech_to_log_in"
-        app:destination="@id/log_in_screen"
-        />
-    <action
+        <action
+            android:id="@+id/action_national_to_home"
+            app:destination="@id/home_screen"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/technology_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.TechnologyFragment"
+        android:label="fragment_technology"
+        tools:layout="@layout/fragment_technology" >
+
+        <action
+            android:id="@+id/action_tech_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+
+        <action
+            android:id="@+id/action_tech_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
+
+        <action
+            android:id="@+id/action_tech_to_home"
+            app:destination="@id/home_screen"/>
+            
+        <action
         android:id="@+id/action_technology_to_edit_article"
         app:destination="@id/edit_article_screen"
         />
