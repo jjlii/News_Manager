@@ -28,6 +28,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.RESTConnection;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -71,6 +72,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO Navigate to to create news
+            }
+        });
+        fb_log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+                ModelManager.getRc().clear();
+                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogOut());
             }
         });
         setVisible();

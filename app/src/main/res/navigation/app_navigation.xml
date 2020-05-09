@@ -24,8 +24,8 @@
             />
 
         <action
-            android:id="@+id/action_home_to_home"
-            app:destination="@id/home_screen"/>
+            android:id="@+id/action_home_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
 
     </fragment>
 
@@ -72,8 +72,8 @@
             />
 
         <action
-            android:id="@+id/action_eco_to_home"
-            app:destination="@id/home_screen"/>
+            android:id="@+id/action_eco_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
 
     </fragment>
 
@@ -97,8 +97,8 @@
             />
 
         <action
-            android:id="@+id/action_sport_to_home"
-            app:destination="@id/home_screen"/>
+            android:id="@+id/action_sport_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
 
     </fragment>
 
@@ -122,8 +122,8 @@
             />
 
         <action
-            android:id="@+id/action_national_to_home"
-            app:destination="@id/home_screen"/>
+            android:id="@+id/action_national_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
 
     </fragment>
 
@@ -143,8 +143,8 @@
             />
 
         <action
-            android:id="@+id/action_tech_to_home"
-            app:destination="@id/home_screen"/>
+            android:id="@+id/action_tech_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
             
         <action
         android:id="@+id/action_technology_to_edit_article"
@@ -157,6 +157,18 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.EditArticleFragment"
         android:label="fragment_edit_article"
         tools:layout="@layout/fragment_edit_article" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/log_out_success_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.LogOutSuccessFragment"
+        android:label="fragment_log_out_success"
+        tools:layout="@layout/fragment_log_out_success">
+
+        <action
+            android:id="@+id/action_log_out_success_to_home"
+            app:destination="@id/home_screen"/>
+
     </fragment>
 
 

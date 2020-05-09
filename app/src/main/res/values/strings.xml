@@ -26,6 +26,8 @@
     <string name="log_out">Log Out</string>
     <string name="create_news">Create News</string>
     <string name="select_image">Select Image</string>
+    <string name="log_out_success">Log Out Success</string>
+    <string name="ok">OK</string>
     <string-array name="categories">
         <item>Select Category</item>
         <item>Economy</item>

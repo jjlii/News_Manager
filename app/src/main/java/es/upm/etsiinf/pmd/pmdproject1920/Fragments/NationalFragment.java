@@ -49,6 +49,15 @@ public class NationalFragment extends Fragment {
                 //TODO Navigate to to create news
             }
         });
+        fb_log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+                ModelManager.getRc().clear();
+                findNavController(fragmentView).navigate(NationalFragmentDirections.actionNationalToLogOut());
+            }
+        });
         showRecyclerView();
     }
 
