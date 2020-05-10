@@ -72,6 +72,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/ly_abstract"
                 android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +87,8 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="Abstract"
                     android:hint="@string/news_abstract"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,20 +96,21 @@
                 android:id="@+id/ly_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ly_abstract"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp">
-
+                android:layout_marginEnd="30dp"
+                android:hint="@string/news_body">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="Body"
-                    android:hint="@string/news_body"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 

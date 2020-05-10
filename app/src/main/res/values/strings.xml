@@ -30,7 +30,6 @@
     <string name="cancel">CANCEL</string>
     <string name="news">News</string>
     <string-array name="categories">
-        <item>Select Category</item>
         <item>Economy</item>
         <item>National</item>
         <item>Sports</item>
