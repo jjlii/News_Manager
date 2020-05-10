@@ -1,5 +1,6 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ public class LogOutSuccessFragment extends Fragment {
     private Button btn_go_home;
 
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -43,4 +45,5 @@ public class LogOutSuccessFragment extends Fragment {
         btn_go_home = view.findViewById(R.id.btn_go_home);
         return view;
     }
+
 }

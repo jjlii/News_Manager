@@ -1,9 +1,12 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,11 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +26,6 @@ import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
-import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.AuthenticationError;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -37,7 +35,6 @@ public class HomeFragment extends Fragment {
     private SharedPreferences preferences;
 
     private RecyclerView rv;
-    private ProgressBar progressBar;
     private List<Article> articles = new ArrayList<>();
     private RecyclerView.LayoutManager layoutManager;
     private NewsAdapter adapter;
@@ -49,18 +46,17 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
         rv = fragmentView.findViewById(R.id.rv_news);
-        progressBar = fragmentView.findViewById(R.id.progress);
         fb_login = getActivity().findViewById(R.id.fb_login);
         fb_create = getActivity().findViewById(R.id.fb_create);
         fb_log_out = getActivity().findViewById(R.id.fb_log_out);
         return fragmentView;
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getPreferencesData();
-        getArticles();
         fb_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,16 +78,14 @@ public class HomeFragment extends Fragment {
                 findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogOut());
             }
         });
-        setVisible();
+        ((MainActivity)getActivity()).setLoading(true);
+        getArticles();
         showRecyclerView();
-    }
-
-    private void setVisible(){
-        progressBar.setVisibility(View.GONE);
-        rv.setVisibility(View.VISIBLE);
+        ((MainActivity)getActivity()).setLoading(false);
     }
 
     private void showRecyclerView(){
+        rv.setVisibility(View.VISIBLE);
         layoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(layoutManager);
         adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
@@ -112,13 +106,13 @@ public class HomeFragment extends Fragment {
             credentials.add(0,user);
             credentials.add(1,pwd);
             try {
-                loginSuccess = new LoginTask().execute(credentials).get();
+                loginSuccess = new LoginTask(getActivity()).execute(credentials).get();
             } catch (ExecutionException | InterruptedException e) {
                 loginSuccess = false;
             }
         }
         try {
-            articles = new AllArticlesTask().execute().get();
+            articles = new AllArticlesTask(getActivity()).execute().get();
         }catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -131,4 +125,6 @@ public class HomeFragment extends Fragment {
         user = preferences.getString("pref_user", null);
         pwd =  preferences.getString("pref_pwd", null);
     }
+
+
 }

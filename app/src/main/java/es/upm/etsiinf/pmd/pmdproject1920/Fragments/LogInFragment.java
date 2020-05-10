@@ -21,11 +21,8 @@ import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
-import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
-import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
-import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.AuthenticationError;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -67,7 +64,6 @@ public class LogInFragment extends Fragment {
                 credentials.add(0,user);
                 credentials.add(1, pwd);
                 Boolean loginSuccess = false;
-
                 if(user.equals("")){
                     et_user.setError("The user is mandatory");
                 }
@@ -76,7 +72,7 @@ public class LogInFragment extends Fragment {
                 }
                 if (!user.equals("") && !pwd.equals("")){
                     try {
-                        loginSuccess = new LoginTask().execute(credentials).get();
+                        loginSuccess = new LoginTask(getActivity()).execute(credentials).get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                         loginSuccess = false;

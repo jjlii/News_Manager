@@ -3,21 +3,12 @@ package es.upm.etsiinf.pmd.pmdproject1920;
 
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
@@ -40,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fb_login, fb_create, fb_log_out, fb_action;
     private Animation fab_open, fab_close;
     private TextView tv_create, tv_log_out;
+    private RelativeLayout loading;
+    private RelativeLayout main_content;
 
     Boolean isOpen = false;
 
@@ -57,16 +50,15 @@ public class MainActivity extends AppCompatActivity {
         tv_log_out = findViewById(R.id.tv_log_out);
         fb_login = findViewById(R.id.fb_login);
         rl_fb_action = findViewById(R.id.rl_fb_action);
-
+        loading = findViewById(R.id.loading);
+        main_content = findViewById(R.id.main_content);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-
         fb_action.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
                 if (isOpen){
-
                     tv_create.setVisibility(View.GONE);
                     tv_log_out.setVisibility(View.GONE);
                     fb_create.startAnimation(fab_close);
@@ -123,11 +115,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    public List<Article> getArticles(){
-        return articles;
-    }
-
     public void setArticles(List<Article> new_articles){
         articles = new_articles;
     }
@@ -140,5 +127,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return res;
+    }
+
+    public void setLoading(boolean visibility) {
+        if (visibility){
+            loading.setVisibility(View.VISIBLE);
+            main_content.setVisibility(View.GONE);
+        }else {
+            loading.setVisibility(View.GONE);
+            main_content.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> {
 
@@ -65,6 +67,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
 
         TextView news_title, news_abstract, news_category ;
         ImageView imageView;
+        ImageButton bt_edit, bt_rm;
         OnItemClickListener onItemClickListener;
         public MyViewHolder( View itemView, OnItemClickListener onItemClickListener){
             super(itemView);
@@ -73,7 +76,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             news_abstract = itemView.findViewById(R.id.tv_abstract);
             news_category = itemView.findViewById(R.id.tv_category);
             imageView = itemView.findViewById(R.id.iv_image);
-
+            bt_edit = itemView.findViewById(R.id.bt_edit);
+            bt_rm = itemView.findViewById(R.id.bt_rm);
+            if(ModelManager.isConnected()){
+                bt_edit.setVisibility(View.VISIBLE);
+                bt_rm.setVisibility(View.VISIBLE);
+            }else {
+                bt_edit.setVisibility(View.GONE);
+                bt_rm.setVisibility(View.GONE);
+            }
             this.onItemClickListener = onItemClickListener;
         }
         @Override
