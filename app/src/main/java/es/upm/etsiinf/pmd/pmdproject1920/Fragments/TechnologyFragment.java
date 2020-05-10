@@ -46,7 +46,7 @@ public class TechnologyFragment extends Fragment {
         fb_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Navigate to to create news
+                findNavController(fragmentView).navigate(TechnologyFragmentDirections.actionTechnologyToEditArticle());
             }
         });
         fb_log_out.setOnClickListener(new View.OnClickListener() {
