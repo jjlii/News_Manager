@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.EditArticleFragment">
-    <ScrollView
+    <es.upm.etsiinf.pmd.pmdproject1920.utils.VerticalScrollview
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -31,6 +31,7 @@
                 android:id="@+id/ly_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_edit_article"
@@ -44,7 +45,11 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="News Title"
                     android:hint="@string/news_title"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,6 +60,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ly_title"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp">
@@ -65,7 +71,11 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="News Subtitle"
                     android:hint="@string/news_subtitle"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,7 +98,10 @@
                     android:autofillHints="Abstract"
                     android:hint="@string/news_abstract"
                     android:inputType="textMultiLine"
-                    android:lines="3"
+                    android:lines="5"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,7 +123,10 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="Body"
                     android:inputType="textMultiLine"
-                    android:lines="3"
+                    android:lines="6"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
                     />
             </com.google.android.material.textfield.TextInputLayout>
             <TextView
@@ -202,7 +218,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </es.upm.etsiinf.pmd.pmdproject1920.utils.VerticalScrollview>
 
 
 

@@ -54,7 +54,7 @@ public class EconomyFragment extends Fragment {
         fb_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findNavController(fragmentView).navigate(EconomyFragmentDirections.actionEconomyToEditArticle());
+                findNavController(fragmentView).navigate(EconomyFragmentDirections.actionEconomyToEditArticle(-1));
             }
         });
         fb_log_out.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +96,11 @@ public class EconomyFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 findNavController(view).navigate(EconomyFragmentDirections.actionEcoToArticleDetail(articles.get(position).getId()));
+            }
+
+            @Override
+            public void onEditItemClick(View view, int position) {
+                findNavController(view).navigate(EconomyFragmentDirections.actionEconomyToEditArticle(articles.get(position).getId()));
             }
         });
         rv.setAdapter(adapter);

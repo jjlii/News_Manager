@@ -55,7 +55,7 @@ public class NationalFragment extends Fragment {
         fb_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findNavController(fragmentView).navigate(NationalFragmentDirections.actionNationalToEditArticle());
+                findNavController(fragmentView).navigate(NationalFragmentDirections.actionNationalToEditArticle(-1));
             }
         });
         fb_log_out.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +95,11 @@ public class NationalFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 findNavController(view).navigate(NationalFragmentDirections.actionNationalToArticleDetail(articles.get(position).getId()));
+            }
+
+            @Override
+            public void onEditItemClick(View view, int position) {
+                findNavController(view).navigate(NationalFragmentDirections.actionNationalToEditArticle(articles.get(position).getId()));
             }
         });
         rv.setAdapter(adapter);

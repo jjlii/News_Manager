@@ -32,7 +32,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     private OnItemClickListener onItemClickListener;
 
 
-    public NewsAdapter(List<Article> articles, Context context, OnItemClickListener onItemClickListener) {
+    public NewsAdapter(List<Article> articles, Context context,
+                       OnItemClickListener onItemClickListener) {
         this.articles = articles;
         this.context = context;
         this.onItemClickListener = onItemClickListener;
@@ -58,7 +59,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(context)
-                        .setTitle("Delete the article "+ article.getTitleText())
+                        .setTitle("Delete the article")
                         .setMessage("Are you sure that you want to delete the article?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                             @Override
@@ -69,6 +70,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
                         .show();
             }
         });
+        holder.bt_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onEditItemClick(v, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -76,12 +83,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         return articles.size();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
-        this.onItemClickListener = onItemClickListener;
-    }
-
     public interface OnItemClickListener{
         void onItemClick(View view, int position);
+        void onEditItemClick(View view, int position);
     }
 
     public class  MyViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener{
@@ -90,7 +94,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         ImageView imageView;
         ImageButton bt_edit, bt_rm;
         OnItemClickListener onItemClickListener;
-        public MyViewHolder( View itemView, OnItemClickListener onItemClickListener){
+
+        public MyViewHolder(final View itemView, final OnItemClickListener onItemClickListener){
             super(itemView);
             itemView.setOnClickListener(this);
             news_title = itemView.findViewById(R.id.tv_title);

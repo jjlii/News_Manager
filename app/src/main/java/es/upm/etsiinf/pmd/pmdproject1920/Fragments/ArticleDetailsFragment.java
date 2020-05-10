@@ -44,8 +44,7 @@ public class ArticleDetailsFragment extends Fragment {
         int articleId = getArguments().getInt("articleId");
         Bitmap img = null;
         try {
-
-            article = new DetailArticleTask().execute(Integer.toString(articleId)).get();
+            article = new DetailArticleTask(getActivity()).execute(Integer.toString(articleId)).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

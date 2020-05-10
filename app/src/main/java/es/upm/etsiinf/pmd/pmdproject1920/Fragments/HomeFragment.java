@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,7 @@ public class HomeFragment extends Fragment {
         fb_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToEditArticle());
+                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToEditArticle(-1));
             }
         });
         fb_log_out.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +104,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 findNavController(view).navigate(HomeFragmentDirections.actionHomeToArticleDetail(articles.get(position).getId()));
+            }
+
+            @Override
+            public void onEditItemClick(View view, int position) {
+                findNavController(view).navigate(HomeFragmentDirections.actionHomeToEditArticle(articles.get(position).getId()));
             }
         });
         rv.setAdapter(adapter);

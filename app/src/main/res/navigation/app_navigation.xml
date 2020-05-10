@@ -157,6 +157,11 @@
         android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.EditArticleFragment"
         android:label="fragment_edit_article"
         tools:layout="@layout/fragment_edit_article" >
+
+        <argument
+            android:name="articleId"
+            app:argType="integer"
+            app:nullable="false"/>
     </fragment>
 
     <fragment
