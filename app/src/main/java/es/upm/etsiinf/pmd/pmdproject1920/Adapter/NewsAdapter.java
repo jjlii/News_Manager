@@ -1,6 +1,8 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import es.upm.etsiinf.pmd.pmdproject1920.Fragments.TechnologyFragmentDirections;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+
+import static androidx.navigation.Navigation.findNavController;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> {
 
@@ -42,12 +48,27 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holders, int position) {
         final  MyViewHolder holder = holders;
-        Article article  = articles.get(position);
+        final Article article  = articles.get(position);
         holder.news_title.setText(article.getTitleText());
         holder.news_abstract.setText(article.getAbstractText());
         holder.news_category.setText(article.getCategory());
         Bitmap img = SerializationUtils.base64StringToImg(article.getThumbnail());
         holder.imageView.setImageBitmap(img);
+        holder.bt_rm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(context)
+                        .setTitle("Delete the article "+ article.getTitleText())
+                        .setMessage("Are you sure that you want to delete the article?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(context, "Delete the article 123", Toast.LENGTH_LONG).show();
+                            }
+                        }).setNegativeButton("No", null)
+                        .show();
+            }
+        });
     }
 
     @Override
