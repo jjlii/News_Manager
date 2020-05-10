@@ -21,7 +21,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="30dp"
                 android:text="@string/news"
                 android:fontFamily="sans-serif-light"
                 android:textSize="30sp"
@@ -34,7 +34,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_edit_article"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp">
 
@@ -113,14 +113,26 @@
                     android:lines="3"
                     />
             </com.google.android.material.textfield.TextInputLayout>
-
+            <TextView
+                android:id="@+id/tv_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ly_body"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:text="@string/select_a_category"
+                android:textStyle="bold"
+                />
             <Spinner
                 android:id="@+id/ly_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ly_body"
+                app:layout_constraintTop_toBottomOf="@id/tv_category"
                 android:entries="@array/categories"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"

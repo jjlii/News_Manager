@@ -44,6 +44,7 @@ public class EditArticleFragment extends Fragment {
     @Override
     public View onCreateView( LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View view;
+        ((MainActivity)getActivity()).setVisibility(View.GONE, ModelManager.isConnected());
         view = inflater.inflate(R.layout.fragment_edit_article, container, false);
         /*
         setContentView(R.layout.activity_main);

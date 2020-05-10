@@ -32,7 +32,7 @@ public class NationalFragment extends Fragment {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private NewsAdapter adapter;
-    private FloatingActionButton fb_create, fb_log_out;
+    private FloatingActionButton fb_login,fb_create, fb_log_out;
     private View fragmentView;
 
 
@@ -41,8 +41,15 @@ public class NationalFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
         articles = ((MainActivity)getActivity()).filterArticles("National");
+        fb_login = getActivity().findViewById(R.id.fb_login);
         fb_create = getActivity().findViewById(R.id.fb_create);
         fb_log_out = getActivity().findViewById(R.id.fb_log_out);
+        fb_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findNavController(fragmentView).navigate(NationalFragmentDirections.actionNationalToLogIn());
+            }
+        });
         fb_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

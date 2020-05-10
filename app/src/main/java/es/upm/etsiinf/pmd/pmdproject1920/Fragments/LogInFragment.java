@@ -61,32 +61,39 @@ public class LogInFragment extends Fragment {
         btn_log_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 String user = et_user.getText().toString();
                 String pwd =et_pwd.getText().toString();
                 List<String> credentials = new ArrayList<>();
                 credentials.add(0,user);
                 credentials.add(1, pwd);
                 Boolean loginSuccess = false;
-                try {
-                    loginSuccess = new LoginTask().execute(credentials).get();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                    loginSuccess = false;
+
+                if(user.equals("")){
+                    et_user.setError("The user is mandatory");
                 }
-                if (loginSuccess){
-                    if (cb_remember.isChecked()){
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString("pref_user", et_user.getText().toString());
-                        editor.putString("pref_pwd", et_pwd.getText().toString());
-                        editor.apply();
-                    }else {
-                        preferences.edit().clear().apply();
+                if (pwd.equals("")){
+                    Toast.makeText(getContext(),"The password is mandatory", Toast.LENGTH_LONG).show();
+                }
+                if (!user.equals("") && !pwd.equals("")){
+                    try {
+                        loginSuccess = new LoginTask().execute(credentials).get();
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                        loginSuccess = false;
                     }
-                    findNavController(v).navigate(LogInFragmentDirections.actionLogInToHome());
-                }else {
-                    Toast.makeText(getContext(),"Authentification Error, try again", Toast.LENGTH_LONG).show();
+                    if (loginSuccess){
+                        if (cb_remember.isChecked()){
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("pref_user", et_user.getText().toString());
+                            editor.putString("pref_pwd", et_pwd.getText().toString());
+                            editor.apply();
+                        }else {
+                            preferences.edit().clear().apply();
+                        }
+                        findNavController(v).navigate(LogInFragmentDirections.actionLogInToHome());
+                    }else {
+                        Toast.makeText(getContext(),"Authentification Error, try again", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
