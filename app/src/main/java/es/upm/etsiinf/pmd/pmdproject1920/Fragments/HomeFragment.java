@@ -2,7 +2,6 @@ package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -25,9 +24,10 @@ import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
-import es.upm.etsiinf.pmd.pmdproject1920.Task.LoadArticlesTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.AuthenticationError;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -73,6 +73,15 @@ public class HomeFragment extends Fragment {
                 findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToEditArticle());
             }
         });
+        fb_log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+                ModelManager.getRc().clear();
+                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogOut());
+            }
+        });
         setVisible();
         showRecyclerView();
     }
@@ -94,21 +103,27 @@ public class HomeFragment extends Fragment {
         rv.setAdapter(adapter);
     }
 
-    private void getArticles(){
-        try {
-            if(null==user || null==pwd ){
-                articles = new AllArticlesTask().execute().get();
-            }else {
-                List<String> credentials = new ArrayList<>();
-                credentials.add(0,user);
-                credentials.add(1,pwd);
-                articles = new LoadArticlesTask().execute(credentials).get();
+    private void getArticles()  {
+        boolean loginSuccess = false;
+        if (!ModelManager.isConnected() &&
+                null!=user
+                && null!=pwd){
+            List<String> credentials= new ArrayList<>();
+            credentials.add(0,user);
+            credentials.add(1,pwd);
+            try {
+                loginSuccess = new LoginTask().execute(credentials).get();
+            } catch (ExecutionException | InterruptedException e) {
+                loginSuccess = false;
             }
-            ((MainActivity)getActivity()).setArticles(articles);
-            ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
-        } catch (ExecutionException | InterruptedException e) {
+        }
+        try {
+            articles = new AllArticlesTask().execute().get();
+        }catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        ((MainActivity)getActivity()).setArticles(articles);
+        ((MainActivity)getActivity()).setVisibility(View.VISIBLE, ModelManager.isConnected());
     }
 
     private void getPreferencesData(){

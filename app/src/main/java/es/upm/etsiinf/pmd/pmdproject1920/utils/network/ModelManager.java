@@ -38,6 +38,8 @@ public class ModelManager {
         return rc.authType;
     }
 
+    public static RESTConnection getRc(){return rc;}
+
 
 
     public static void stayloggedin(String idUser, String apikey, String authType) {
@@ -58,7 +60,6 @@ public class ModelManager {
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "login";
-
             URL url = new URL(request);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             if(rc.requireSelfSigned)

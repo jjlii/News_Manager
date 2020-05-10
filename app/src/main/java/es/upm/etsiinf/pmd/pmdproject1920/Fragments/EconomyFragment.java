@@ -48,6 +48,15 @@ public class EconomyFragment extends Fragment {
                 findNavController(fragmentView).navigate(EconomyFragmentDirections.actionEconomyToEditArticle());
             }
         });
+        fb_log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+                ModelManager.getRc().clear();
+                findNavController(fragmentView).navigate(EconomyFragmentDirections.actionEcoToLogOut());
+            }
+        });
         showRecyclerView();
     }
 

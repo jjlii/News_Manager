@@ -95,46 +95,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fb_log_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
-                        .edit().clear().apply();
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction("com.package.ACTION_LOGOUT");
-                sendBroadcast(broadcastIntent);
-            }
-        });
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.package.ACTION_LOGOUT");
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("onReceive","Logout in progress");
-                //At this point you should start the login activity and finish this one
-                finish();
-            }
-        }, intentFilter);
-
     }
 
     @SuppressLint("RestrictedApi")
     public void setVisibility(int visibility, boolean menuVisibility){
         bottom_navigation.setVisibility(visibility);
         fb_login.setVisibility(visibility);
-        rl_fb_action.setVisibility(visibility);
-        if (visibility == View.VISIBLE){
+        if (visibility == View.GONE){
+            rl_fb_action.setVisibility(View.GONE);
+        }else {
             setMenuVisibility(menuVisibility);
         }
-
     }
 
     @SuppressLint("RestrictedApi")
     private void setMenuVisibility(boolean menuVisibility){
         if (menuVisibility){
+            rl_fb_action.setVisibility(View.VISIBLE);
+            fb_create.setVisibility(View.GONE);
+            fb_log_out.setVisibility(View.GONE);
             fb_login.setVisibility(View.GONE);
         }else {
+            rl_fb_action.setVisibility(View.GONE);
+            fb_create.setVisibility(View.GONE);
+            fb_log_out.setVisibility(View.GONE);
             fb_login.setVisibility(View.VISIBLE);
         }
     }

@@ -49,8 +49,16 @@ public class SportFragment extends Fragment {
                 findNavController(fragmentView).navigate(SportFragmentDirections.actionSportToEditArticle());
             }
         });
+        fb_log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                        .edit().clear().apply();
+                ModelManager.getRc().clear();
+                findNavController(fragmentView).navigate(SportFragmentDirections.actionSportToLogOut());
+            }
+        });
         showRecyclerView();
-
     }
 
     @Override

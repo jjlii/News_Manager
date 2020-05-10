@@ -29,6 +29,8 @@
     <string name="save">SAVE</string>
     <string name="cancel">CANCEL</string>
     <string name="news">News</string>
+    <string name="log_out_success">Log Out Success</string>
+    <string name="ok">OK</string>
     <string-array name="categories">
         <item>Economy</item>
         <item>National</item>
