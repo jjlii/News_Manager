@@ -3,6 +3,7 @@ package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -72,10 +73,19 @@ public class HomeFragment extends Fragment {
         fb_log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
-                        .edit().clear().apply();
-                ModelManager.getRc().clear();
-                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogOut());
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Log out")
+                        .setMessage("Are you sure you want to log out the account?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().getSharedPreferences("PrefsFile", Context.MODE_PRIVATE)
+                                        .edit().clear().apply();
+                                ModelManager.getRc().clear();
+                                findNavController(fragmentView).navigate(HomeFragmentDirections.actionHomeToLogOut());
+                            }
+                        }).setNegativeButton("No", null)
+                        .show();
             }
         });
         ((MainActivity)getActivity()).setLoading(true);
