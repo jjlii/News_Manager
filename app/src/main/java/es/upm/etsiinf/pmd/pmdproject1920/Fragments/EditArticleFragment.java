@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
@@ -40,7 +41,9 @@ import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.DetailArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 
@@ -49,6 +52,8 @@ public class EditArticleFragment extends Fragment {
     private Article article;
     private TextInputEditText et_title, et_subtitle, et_abstract, et_body;
     private Spinner ly_category;
+    private ImageView iv_image;
+    private Button btn_cancel;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class EditArticleFragment extends Fragment {
                 "National",
                 "Sports",
                 "Technology"));
+        Bitmap img = null;
         if (article != null){
             et_title.setText(article.getTitleText());
             et_subtitle.setText(article.getSubtitleText());
@@ -68,9 +74,20 @@ public class EditArticleFragment extends Fragment {
             }else {
                 et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
             }
-
             ly_category.setSelection(items.indexOf(article.getCategory()));
+            try {
+                img = SerializationUtils.base64StringToImg(article.getImage().getImage());
+            } catch (ServerCommunicationError serverCommunicationError) {
+                serverCommunicationError.printStackTrace();
+            }
+            iv_image.setImageBitmap(img);
         }
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -91,7 +108,8 @@ public class EditArticleFragment extends Fragment {
         et_abstract= view.findViewById(R.id.et_abstract);
         et_body= view.findViewById(R.id.et_body);
         ly_category = view.findViewById(R.id.ly_category);
-
+        iv_image = view.findViewById(R.id.iv_image);
+        btn_cancel = view.findViewById(R.id.btn_cancel);
         /*
         setContentView(R.layout.activity_main);
         imageView = (ImageView)findViewById(R.id.imageView);
