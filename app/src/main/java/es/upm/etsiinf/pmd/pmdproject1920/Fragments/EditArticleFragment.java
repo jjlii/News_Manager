@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,6 +54,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.model.Image;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.core.app.ActivityCompat.startActivityForResult;
@@ -68,6 +70,7 @@ public class EditArticleFragment extends Fragment {
     private ImageView iv_image;
     private Button btn_cancel, btn_load_picture, btn_save;
     private String userId;
+    private Image image = null;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -97,6 +100,11 @@ public class EditArticleFragment extends Fragment {
                 serverCommunicationError.printStackTrace();
             }
             iv_image.setImageBitmap(img);
+            try {
+                image = article.getImage();
+            } catch (ServerCommunicationError serverCommunicationError) {
+                serverCommunicationError.printStackTrace();
+            }
         }
 
 
@@ -171,7 +179,7 @@ public class EditArticleFragment extends Fragment {
 
 
 
-    private void saveAction(){
+    private void checkMandatory(){
         SimpleDateFormat sdfDate = new SimpleDateFormat(DATE_FORMAT_MYSQL);
         Date now = new Date();
         String nowStr = sdfDate.format(now);
@@ -189,20 +197,45 @@ public class EditArticleFragment extends Fragment {
         else if (et_body.getText().equals(""))
             et_body.setError("The Body is mandatory");
         else {
-            Article a = new Article(
-                    ly_category.getSelectedItem().toString(),
-                    et_title.getText().toString(),
-                    et_abstract.getText().toString(),
-                    et_body.getText().toString(),
-                    et_subtitle.getText().toString(),
-                    userId
-            );
-            if (((BitmapDrawable)iv_image.getDrawable()).getBitmap()!=null){
-                Bitmap thumbnail = ((BitmapDrawable)iv_image.getDrawable()).getBitmap();
-                a.setThumbnail(SerializationUtils.imgToBase64String(thumbnail));
+            if (article != null){
+                updateAction(now);
+            }else {
+                createAction(now);
             }
 
         }
-
     }
+
+    private void createAction(Date now){
+        Article a = new Article(
+                ly_category.getSelectedItem().toString(),
+                et_title.getText().toString(),
+                et_abstract.getText().toString(),
+                et_body.getText().toString(),
+                et_subtitle.getText().toString(),
+                userId
+        );
+        if (((BitmapDrawable)iv_image.getDrawable()).getBitmap()!=null){
+            String thumbnail = SerializationUtils.imgToBase64String(
+                    ((BitmapDrawable)iv_image.getDrawable()).getBitmap());
+            try {
+                a.addImage(thumbnail, "");
+            } catch (ServerCommunicationError serverCommunicationError) {
+                Log.e("Add Image Error", serverCommunicationError.getMessage());
+                utils.dialogDeleteRes(getContext(), "Error adding the image");
+            }
+        }
+        a.setLastUpdate(now);
+    }
+
+    private void updateAction(Date now){
+        article.setCategory(ly_category.getSelectedItem().toString());
+        article.setTitleText(et_title.getText().toString());
+        article.setAbstractText(et_abstract.getText().toString());
+        article.setBodyText(et_body.getText().toString());
+        article.setSubtitleText(et_subtitle.getText().toString());
+        article.setLastUpdate(now);
+    }
+
+
 }
