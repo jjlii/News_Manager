@@ -26,6 +26,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.DeleteArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
@@ -110,8 +111,43 @@ public class HomeFragment extends Fragment {
             public void onEditItemClick(View view, int position) {
                 findNavController(view).navigate(HomeFragmentDirections.actionHomeToEditArticle(articles.get(position).getId()));
             }
+
+            @Override
+            public void onDeleteItemClick(View view, final int articleId, final int position) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete the article")
+                        .setMessage("Are you sure that you want to delete the article?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                boolean deleteRes = deleteAction(Integer.toString(articleId));
+                                if(!deleteRes){
+                                    Toast.makeText(getContext(),"Error deleting article with id: "+articleId, Toast.LENGTH_LONG).show();
+                                }else {
+                                    articles.remove(position);
+                                    rv.removeViewAt(position);
+                                    adapter.notifyItemRemoved(position);
+                                    adapter.notifyItemRangeChanged(position, articles.size());
+                                }
+                            }
+                        }).setNegativeButton("No", null)
+                        .show();
+
+            }
         });
         rv.setAdapter(adapter);
+    }
+
+    private boolean deleteAction(String articleId){
+        boolean deleteResult;
+        try {
+            deleteResult = new DeleteArticleTask().execute(articleId).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            deleteResult=false;
+        }
+        return deleteResult;
+
     }
 
     private void getArticles()  {

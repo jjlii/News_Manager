@@ -101,6 +101,19 @@ public class NationalFragment extends Fragment {
             public void onEditItemClick(View view, int position) {
                 findNavController(view).navigate(NationalFragmentDirections.actionNationalToEditArticle(articles.get(position).getId()));
             }
+            @Override
+            public void onDeleteItemClick(View view, int position) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete the article")
+                        .setMessage("Are you sure that you want to delete the article?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).setNegativeButton("No", null)
+                        .show();
+            }
         });
         rv.setAdapter(adapter);
     }
