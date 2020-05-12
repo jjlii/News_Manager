@@ -30,6 +30,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.Task.DeleteArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -120,35 +121,26 @@ public class HomeFragment extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                boolean deleteRes = deleteAction(Integer.toString(articleId));
+                                boolean deleteRes = utils.deleteAction(Integer.toString(articleId));
                                 if(!deleteRes){
-                                    Toast.makeText(getContext(),"Error deleting article with id: "+articleId, Toast.LENGTH_LONG).show();
+                                    utils.dialogDeleteRes(getContext(),"Error deleting article with id: "+articleId);
                                 }else {
                                     articles.remove(position);
                                     rv.removeViewAt(position);
                                     adapter.notifyItemRemoved(position);
                                     adapter.notifyItemRangeChanged(position, articles.size());
+                                    ((MainActivity)getActivity()).setArticles(articles);
+                                    utils.dialogDeleteRes(getContext(),"The article with id: "+articleId+" is deleted");
                                 }
                             }
                         }).setNegativeButton("No", null)
                         .show();
-
             }
         });
         rv.setAdapter(adapter);
     }
 
-    private boolean deleteAction(String articleId){
-        boolean deleteResult;
-        try {
-            deleteResult = new DeleteArticleTask().execute(articleId).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            deleteResult=false;
-        }
-        return deleteResult;
 
-    }
 
     private void getArticles()  {
         boolean loginSuccess = false;
@@ -178,6 +170,8 @@ public class HomeFragment extends Fragment {
         user = preferences.getString("pref_user", null);
         pwd =  preferences.getString("pref_pwd", null);
     }
+
+
 
 
 }

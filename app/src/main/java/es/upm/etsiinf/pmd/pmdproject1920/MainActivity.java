@@ -20,7 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 
 public class MainActivity extends AppCompatActivity {
@@ -138,4 +137,6 @@ public class MainActivity extends AppCompatActivity {
             main_content.setVisibility(View.VISIBLE);
         }
     }
+
+
 }
