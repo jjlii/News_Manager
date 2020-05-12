@@ -119,6 +119,14 @@ public class Article extends ModelEntity {
 		return image;
 	}
 
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
 	public void setImage(Image image) {
 		this.mainImage = image;
 	}
@@ -128,6 +136,14 @@ public class Article extends ModelEntity {
 		Image img =new Image(order, description, getId(), b64Image);
 		mainImage= img;
 		return img;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 	
 	@Override

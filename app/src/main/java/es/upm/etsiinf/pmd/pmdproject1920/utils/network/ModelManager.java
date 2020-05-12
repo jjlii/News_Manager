@@ -19,7 +19,8 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunic
 import static es.upm.etsiinf.pmd.pmdproject1920.utils.network.ServiceCallUtils.parseHttpStreamResult;
 
 public class ModelManager {
-    private static RESTConnection rc = null;
+
+    private static RESTConnection rc = new RESTConnection("https://sanger.dia.fi.upm.es/pmd-task/",true);
 
     public static boolean isConnected(){
         return rc.idUser!=null;
@@ -37,14 +38,9 @@ public class ModelManager {
         return rc.authType;
     }
 
-    /**
-     *
-     * @param ini Initializes entity manager urls and users
-     * @throws AuthenticationError
-     */
-    public static void configureConnection(Properties ini)  {
-        rc = new RESTConnection(ini);
-    }
+    public static RESTConnection getRc(){return rc;}
+
+
 
     public static void stayloggedin(String idUser, String apikey, String authType) {
         rc.idUser = idUser;
@@ -64,7 +60,6 @@ public class ModelManager {
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "login";
-
             URL url = new URL(request);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             if(rc.requireSelfSigned)
@@ -86,6 +81,7 @@ public class ModelManager {
 
             int HttpResult =connection.getResponseCode();
             if(HttpResult ==HttpURLConnection.HTTP_OK){
+                Logger.log(Logger.INFO, "HttpURLConnection response code -> " + HttpResult);
                 res = parseHttpStreamResult(connection);
 
                 JSONObject userJsonObject = ServiceCallUtils.readRestResultFromSingle(res);
@@ -315,7 +311,7 @@ public class ModelManager {
         }
     }
 
-    private static void deleteArticle(int idArticle) throws ServerCommunicationError{
+    public static void deleteArticle(int idArticle) throws ServerCommunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "article/" + idArticle;
