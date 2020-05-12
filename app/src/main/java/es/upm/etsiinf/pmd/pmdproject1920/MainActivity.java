@@ -3,6 +3,10 @@ package es.upm.etsiinf.pmd.pmdproject1920;
 
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -113,6 +118,27 @@ public class MainActivity extends AppCompatActivity {
             fb_log_out.setVisibility(View.GONE);
             fb_login.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void createNotification () {
+        String message = "This is a notification example.";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_notifications)
+                .setContentTitle("New notification")
+                .setContentText(message);
+               // .setWhen();
+        Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("message", message);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0,
+                builder.build());
     }
 
     public void setArticles(List<Article> new_articles){
