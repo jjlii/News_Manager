@@ -38,6 +38,7 @@ public class AllArticlesTask extends AsyncTask<Void, Void, List<Article>> {
         List<Article> res = null;
         try {
             res = ModelManager.getArticles();
+
         } catch (ServerCommunicationError serverCommunicationError) {
             serverCommunicationError.printStackTrace();
         }

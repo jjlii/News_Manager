@@ -65,6 +65,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(context, "Delete the article 123", Toast.LENGTH_LONG).show();
+
                             }
                         }).setNegativeButton("No", null)
                         .show();
