@@ -109,6 +109,10 @@ public class Image extends ModelEntity {
 	public String getImage(){
 		return image;
 	}
+
+	public void setImage(String img){
+		this.image = img;
+	}
 	
 
 }

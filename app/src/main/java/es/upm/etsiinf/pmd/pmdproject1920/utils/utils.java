@@ -9,9 +9,9 @@ import es.upm.etsiinf.pmd.pmdproject1920.Task.DeleteArticleTask;
 
 public class utils {
 
-    public static void dialogDeleteRes(Context context, String msg){
+    public static void showInfoDialog(Context context, String msg){
         new AlertDialog.Builder(context)
-                .setTitle("Delete the article")
+                .setTitle("Warning")
                 .setMessage(msg).setNegativeButton("Ok", null)
                 .show();
     }

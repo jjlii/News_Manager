@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import es.upm.etsiinf.pmd.pmdproject1920.Adapter.NewsAdapter;
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
-import es.upm.etsiinf.pmd.pmdproject1920.Task.DeleteArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
@@ -123,14 +120,14 @@ public class HomeFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 boolean deleteRes = utils.deleteAction(Integer.toString(articleId));
                                 if(!deleteRes){
-                                    utils.dialogDeleteRes(getContext(),"Error deleting article with id: "+articleId);
+                                    utils.showInfoDialog(getContext(),"Error deleting article with id: "+articleId);
                                 }else {
                                     articles.remove(position);
                                     rv.removeViewAt(position);
                                     adapter.notifyItemRemoved(position);
                                     adapter.notifyItemRangeChanged(position, articles.size());
                                     ((MainActivity)getActivity()).setArticles(articles);
-                                    utils.dialogDeleteRes(getContext(),"The article with id: "+articleId+" is deleted");
+                                    utils.showInfoDialog(getContext(),"The article with id: "+articleId+" is deleted");
                                 }
                             }
                         }).setNegativeButton("No", null)

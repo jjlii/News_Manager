@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
@@ -113,14 +112,14 @@ public class EconomyFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 boolean deleteRes = utils.deleteAction(Integer.toString(articleId));
                                 if(!deleteRes){
-                                    utils.dialogDeleteRes(getContext(),"Error deleting article with id: "+articleId);
+                                    utils.showInfoDialog(getContext(),"Error deleting article with id: "+articleId);
                                 }else {
                                     articles.remove(position);
                                     rv.removeViewAt(position);
                                     adapter.notifyItemRemoved(position);
                                     adapter.notifyItemRangeChanged(position, articles.size());
                                     ((MainActivity)getActivity()).setArticles(articles);
-                                    utils.dialogDeleteRes(getContext(),"The article with id: "+articleId+" is deleted");
+                                    utils.showInfoDialog(getContext(),"The article with id: "+articleId+" is deleted");
                                 }
                             }
                         }).setNegativeButton("No", null)

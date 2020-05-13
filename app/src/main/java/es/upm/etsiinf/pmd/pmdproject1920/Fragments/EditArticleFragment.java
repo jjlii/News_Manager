@@ -1,42 +1,24 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -49,6 +31,8 @@ import java.util.concurrent.ExecutionException;
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.DetailArticleTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.SaveArticleTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.SaveImageTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Image;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
@@ -57,13 +41,13 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunic
 import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
 import static android.app.Activity.RESULT_OK;
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-import static es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils.imgToBase64String;
 
 public class EditArticleFragment extends Fragment {
 
     private static final int PICK_IMAGE = 100;
     private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd hh:mm:ss";
+    private static final String EMPTY_IMG_DES = "";
+
     private Article article;
     private TextInputEditText et_title, et_subtitle, et_abstract, et_body;
     private Spinner ly_category;
@@ -107,7 +91,6 @@ public class EditArticleFragment extends Fragment {
             }
         }
 
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +101,7 @@ public class EditArticleFragment extends Fragment {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                publishProcess();
             }
         });
 
@@ -179,7 +162,7 @@ public class EditArticleFragment extends Fragment {
 
 
 
-    private void checkMandatory(){
+    private void publishProcess(){
         SimpleDateFormat sdfDate = new SimpleDateFormat(DATE_FORMAT_MYSQL);
         Date now = new Date();
         String nowStr = sdfDate.format(now);
@@ -197,44 +180,67 @@ public class EditArticleFragment extends Fragment {
         else if (et_body.getText().equals(""))
             et_body.setError("The Body is mandatory");
         else {
-            if (article != null){
-                updateAction(now);
-            }else {
-                createAction(now);
-            }
-
+            publishAction(now);
         }
     }
 
-    private void createAction(Date now){
-        Article a = new Article(
-                ly_category.getSelectedItem().toString(),
-                et_title.getText().toString(),
-                et_abstract.getText().toString(),
-                et_body.getText().toString(),
-                et_subtitle.getText().toString(),
-                userId
-        );
-        if (((BitmapDrawable)iv_image.getDrawable()).getBitmap()!=null){
-            String thumbnail = SerializationUtils.imgToBase64String(
-                    ((BitmapDrawable)iv_image.getDrawable()).getBitmap());
+    private void publishAction(Date now){
+        Article publishArticle;
+        int saveArticleTask;
+        if (!checkNotChangeArticle() || !sameImg()){
+            publishArticle = new Article(
+                    ly_category.getSelectedItem().toString(),
+                    et_title.getText().toString(),
+                    et_abstract.getText().toString(),
+                    et_body.getText().toString(),
+                    et_subtitle.getText().toString(),
+                    userId
+            );
+            if (((BitmapDrawable)iv_image.getDrawable()).getBitmap()!=null){
+                String thumbnail = SerializationUtils.imgToBase64String(
+                        ((BitmapDrawable)iv_image.getDrawable()).getBitmap());
+                try {
+                    publishArticle.addImage(thumbnail, EMPTY_IMG_DES);
+                } catch (ServerCommunicationError serverCommunicationError) {
+                    Log.e("Add Image Error", serverCommunicationError.getMessage());
+                    utils.showInfoDialog(getContext(), "Error adding the image");
+                }
+            }
+            publishArticle.setLastUpdate(now);
+
             try {
-                a.addImage(thumbnail, "");
-            } catch (ServerCommunicationError serverCommunicationError) {
-                Log.e("Add Image Error", serverCommunicationError.getMessage());
-                utils.dialogDeleteRes(getContext(), "Error adding the image");
+                saveArticleTask = new SaveArticleTask().execute(publishArticle).get();
+                if (saveArticleTask==-1){
+                    utils.showInfoDialog(getContext(), "Error publishing the article, try again");
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+                utils.showInfoDialog(getContext(), "Error publishing the article, try again");
             }
+        }else {
+            utils.showInfoDialog(getContext(),"Not content to update!");
         }
-        a.setLastUpdate(now);
     }
 
-    private void updateAction(Date now){
-        article.setCategory(ly_category.getSelectedItem().toString());
-        article.setTitleText(et_title.getText().toString());
-        article.setAbstractText(et_abstract.getText().toString());
-        article.setBodyText(et_body.getText().toString());
-        article.setSubtitleText(et_subtitle.getText().toString());
-        article.setLastUpdate(now);
+
+
+    private boolean checkNotChangeArticle(){
+        return article.getCategory().equals(ly_category.getSelectedItem().toString())&&
+                article.getTitleText().equals(et_title.getText().toString())&&
+                article.getAbstractText().equals(et_abstract.getText().toString())&&
+                article.getBodyText().equals(et_body.getText().toString())&&
+                article.getSubtitleText().equals(et_subtitle.getText().toString());
+    }
+
+    private boolean sameImg(){
+        try {
+            Bitmap originalImg = SerializationUtils.base64StringToImg(article.getImage().getImage());
+            Bitmap view_image = ((BitmapDrawable)iv_image.getDrawable()).getBitmap();
+            return originalImg.equals(view_image);
+        } catch (ServerCommunicationError serverCommunicationError) {
+            serverCommunicationError.printStackTrace();
+        }
+        return false;
     }
 
 
