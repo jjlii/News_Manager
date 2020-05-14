@@ -20,7 +20,7 @@ public class BBDDArticle {
         helper = new BBDDHelper(c);
     }
 
-    public static List<Article> loadAllMessages(){
+    public static List<Article> loadAllArticles(){
         ArrayList<Article> result = new ArrayList<>();
 
         SQLiteDatabase db = helper.getReadableDatabase();

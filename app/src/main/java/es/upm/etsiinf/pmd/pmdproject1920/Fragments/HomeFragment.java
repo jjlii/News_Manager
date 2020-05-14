@@ -27,6 +27,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
+import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 
@@ -92,6 +93,7 @@ public class HomeFragment extends Fragment {
         });
         ((MainActivity)getActivity()).setLoading(true);
         getArticles();
+
         showRecyclerView();
         ((MainActivity)getActivity()).setLoading(false);
     }
@@ -129,7 +131,14 @@ public class HomeFragment extends Fragment {
             }
         }
         try {
-            articles = new AllArticlesTask(getActivity()).execute().get();
+            articles = BBDDArticle.loadAllArticles();//carga todos los ariculos de la BBDD//problemas; no se vuelve a cargar nunca más, hay que buscar manera eficiente de recargar esta kk
+            //tengo alguna idea pero me parecen mierda, prefiero no meterlas y consultarla con el resto
+            if(articles.isEmpty()){//comprueba si habia articulos en la bbdd
+
+                articles = new AllArticlesTask(getActivity()).execute().get();
+                for(Article article: articles)BBDDArticle.newArticle(article);//si no los había los mete
+
+            }
         }catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
