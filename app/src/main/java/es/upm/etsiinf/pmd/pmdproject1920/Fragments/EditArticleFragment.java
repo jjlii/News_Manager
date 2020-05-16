@@ -51,7 +51,7 @@ public class EditArticleFragment extends Fragment {
     private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd hh:mm:ss";
     private static final String EMPTY_IMG_DES = "";
 
-    private Article article, publishArticle;
+    private Article article;
     private TextInputEditText et_title, et_subtitle, et_abstract, et_body;
     private Spinner ly_category;
     private ImageView iv_image;
@@ -75,17 +75,21 @@ public class EditArticleFragment extends Fragment {
             btn_save.setText(R.string.save);
             userId = String.valueOf(article.getIdUser());
             oldArticleId = article.getId();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-            }else {
-                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
-                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>"));
-                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
-                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
-            }
+            et_title.setText(article.getTitleText());
+            et_subtitle.setText(article.getSubtitleText());
+            et_abstract.setText(article.getAbstractText());
+            et_body.setText(article.getBodyText());
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//            }else {
+//                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
+//                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>"));
+//                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
+//                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
+//            }
             ly_category.setSelection(items.indexOf(article.getCategory()));
             try {
                 img = SerializationUtils.base64StringToImg(article.getImage().getImage());
@@ -194,61 +198,55 @@ public class EditArticleFragment extends Fragment {
             et_body.setError("The Body is mandatory");
         else {
             publishAction(now);
-            updateFromTheMainList();
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Success")
-                    .setMessage("Article is "+btn_save.getText()).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    getActivity().onBackPressed();
-                }
-            })
-                    .show();
         }
     }
 
     private void publishAction(Date now){
         int newArticleId;
-        if (!checkNotChangeArticle() || !sameImg()){
-            publishArticle = new Article(
-                    ly_category.getSelectedItem().toString(),
-                    et_title.getText().toString(),
-                    et_abstract.getText().toString(),
-                    et_body.getText().toString(),
-                    et_subtitle.getText().toString(),
-                    userId
-            );
+        if (!checkNotChangeArticle()){
+            if(article != null){
+                article.setCategory(ly_category.getSelectedItem().toString());
+                article.setTitleText(et_title.getText().toString());
+                article.setAbstractText(et_abstract.getText().toString());
+                article.setBodyText(et_body.getText().toString());
+                article.setSubtitleText(et_subtitle.getText().toString());
+            }else {
+                article = new Article(
+                        ly_category.getSelectedItem().toString(),
+                        et_title.getText().toString(),
+                        et_abstract.getText().toString(),
+                        et_body.getText().toString(),
+                        et_subtitle.getText().toString(),
+                        userId
+                );
+            }
             if (null!=iv_image.getDrawable()){
                 String thumbnail = SerializationUtils.imgToBase64String(
                         ((BitmapDrawable)iv_image.getDrawable()).getBitmap());
                 try {
-                    publishArticle.addImage(thumbnail, EMPTY_IMG_DES);
-                    publishArticle.setThumbnail(thumbnail);
+                    article.addImage(thumbnail, EMPTY_IMG_DES);
+                    article.setThumbnail(thumbnail);
                 } catch (ServerCommunicationError serverCommunicationError) {
                     Log.e("Add Image Error", serverCommunicationError.getMessage());
                     utils.showInfoDialog(getContext(), "Error adding the image");
                 }
             }
-            publishArticle.setLastUpdate(now);
+            article.setLastUpdate(now);
             layoutInflater = getActivity().getLayoutInflater();
             loading =  new AlertDialog.Builder(getActivity())
                     .setView(layoutInflater.inflate(R.layout.fullscreen_loading_dialog,null))
                     .setCancelable(false).create();
             loading.show();
             try {
-                newArticleId = new SaveArticleTask().execute(publishArticle).get();
-                if (newArticleId==-1){
-                    utils.showInfoDialog(getContext(), "Error publishing the article, try again");
-                }else {
-                    publishArticle.setId(newArticleId);
+                newArticleId = new SaveArticleTask().execute(article).get();
+                if (oldArticleId ==-1){
+                    article.setId(newArticleId);
                 }
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
-                utils.showInfoDialog(getContext(), "Error publishing the article, try again");
             }
             loading.dismiss();
-
-
+            updateFromTheMainList();
         }else {
             utils.showInfoDialog(getContext(),"Not content to update!");
         }
@@ -270,30 +268,34 @@ public class EditArticleFragment extends Fragment {
         return res;
     }
 
-    private boolean sameImg(){
-        try {
-            Bitmap originalImg = SerializationUtils.base64StringToImg(article.getImage().getImage());
-            Bitmap view_image = ((BitmapDrawable)iv_image.getDrawable()).getBitmap();
-            return originalImg.equals(view_image);
-        } catch (ServerCommunicationError serverCommunicationError) {
-            serverCommunicationError.printStackTrace();
-        }
-        return false;
-    }
 
     private void updateFromTheMainList(){
         List<Article> articles = ((MainActivity)getActivity()).getArticles();
-        List<Article> newArticles = new ArrayList<>();
-        if(article != null){
+        if(oldArticleId != -1){
+            List<Article> newArticles = new ArrayList<>();
             for(Article auxArticle : articles){
                 if (auxArticle.getId() != oldArticleId){
                     newArticles.add(auxArticle);
                 }
             }
-            newArticles.add(publishArticle);
+            newArticles.add(article);
             newArticles = utils.sortArticlesByDates(newArticles);
             ((MainActivity)getActivity()).setArticles(newArticles);
+        }else {
+            articles.add(article);
+            articles = utils.sortArticlesByDates(articles);
+            ((MainActivity)getActivity()).setArticles(articles);
         }
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Success")
+                .setMessage("Article is "+btn_save.getText()).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().onBackPressed();
+            }
+        })
+                .show();
     }
 
 }
