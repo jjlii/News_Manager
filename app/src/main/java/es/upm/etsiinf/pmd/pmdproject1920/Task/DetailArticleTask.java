@@ -13,25 +13,6 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunic
 
 public class DetailArticleTask  extends AsyncTask<String, Void, Article>{
 
-    private AlertDialog alertDialog;
-    @SuppressLint("StaticFieldLeak")
-    private Activity activity;
-
-    public DetailArticleTask(Activity myActivity){
-        activity = myActivity;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        LayoutInflater i = activity.getLayoutInflater();
-        alertDialog = new AlertDialog.Builder(activity)
-                .setView(i.inflate(R.layout.fullscreen_loading_dialog,null))
-                .setCancelable(false)
-                .create();
-        alertDialog.show();
-    }
-
     @Override
     protected Article doInBackground(String... articleId) {
         Article res = null;
@@ -45,11 +26,5 @@ public class DetailArticleTask  extends AsyncTask<String, Void, Article>{
 
         }
         return res;
-    }
-
-    @Override
-    protected void onPostExecute(Article article) {
-        super.onPostExecute(article);
-        alertDialog.dismiss();
     }
 }

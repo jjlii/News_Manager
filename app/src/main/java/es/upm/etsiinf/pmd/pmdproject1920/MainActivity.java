@@ -118,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
         articles = new_articles;
     }
 
+    public List<Article> getArticles(){
+        return articles;
+    }
+
     public List<Article> filterArticles(String category){
         List<Article> res = new ArrayList<>();
         for(Article article:articles){

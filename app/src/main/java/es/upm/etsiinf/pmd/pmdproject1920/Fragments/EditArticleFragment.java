@@ -1,5 +1,7 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -26,6 +28,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
@@ -48,13 +51,15 @@ public class EditArticleFragment extends Fragment {
     private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd hh:mm:ss";
     private static final String EMPTY_IMG_DES = "";
 
-    private Article article;
+    private Article article, publishArticle;
     private TextInputEditText et_title, et_subtitle, et_abstract, et_body;
     private Spinner ly_category;
     private ImageView iv_image;
     private Button btn_cancel, btn_load_picture, btn_save;
     private String userId;
-    private Image image = null;
+    private int oldArticleId = -1;
+    private AlertDialog loading;
+    private LayoutInflater layoutInflater;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -69,12 +74,16 @@ public class EditArticleFragment extends Fragment {
         if (article != null){
             btn_save.setText(R.string.save);
             userId = String.valueOf(article.getIdUser());
-            et_title.setText(article.getTitleText());
-            et_subtitle.setText(article.getSubtitleText());
-            et_abstract.setText(article.getAbstractText());
+            oldArticleId = article.getId();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
                 et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
             }else {
+                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
+                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>"));
+                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
                 et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
             }
             ly_category.setSelection(items.indexOf(article.getCategory()));
@@ -84,11 +93,8 @@ public class EditArticleFragment extends Fragment {
                 serverCommunicationError.printStackTrace();
             }
             iv_image.setImageBitmap(img);
-            try {
-                image = article.getImage();
-            } catch (ServerCommunicationError serverCommunicationError) {
-                serverCommunicationError.printStackTrace();
-            }
+        }else {
+
         }
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +107,17 @@ public class EditArticleFragment extends Fragment {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                publishProcess();
+                new AlertDialog.Builder(getContext())
+                        .setTitle(btn_save.getText())
+                        .setMessage("Do you want to save change?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                publishProcess();
+                            }
+                        })
+                        .setNegativeButton("Ok", null)
+                        .show();
             }
         });
 
@@ -124,7 +140,7 @@ public class EditArticleFragment extends Fragment {
         int articleId = getArguments().getInt("articleId");
         if (articleId!=-1){
             try {
-                article = new DetailArticleTask(getActivity()).execute(Integer.toString(articleId)).get();
+                article = new DetailArticleTask().execute(Integer.toString(articleId)).get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -138,9 +154,6 @@ public class EditArticleFragment extends Fragment {
         btn_cancel = view.findViewById(R.id.btn_cancel);
         btn_load_picture = view.findViewById(R.id.btn_load_picture);
         btn_save = view.findViewById(R.id.btn_save);
-
-
-
         return view;
     }
 
@@ -171,22 +184,31 @@ public class EditArticleFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (et_title.getText().equals(""))
+        if (et_title.getText().toString().equals(""))
             et_title.setError("The Title is mandatory");
-        else if (et_subtitle.getText().equals(""))
+        else if (et_subtitle.getText().toString().equals(""))
             et_subtitle.setError("The Subtitle is mandatory");
-        else if (et_abstract.getText().equals(""))
+        else if (et_abstract.getText().toString().equals(""))
             et_abstract.setError("The Abstract is mandatory");
-        else if (et_body.getText().equals(""))
+        else if (et_body.getText().toString().equals(""))
             et_body.setError("The Body is mandatory");
         else {
             publishAction(now);
+            updateFromTheMainList();
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Success")
+                    .setMessage("Article is "+btn_save.getText()).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().onBackPressed();
+                }
+            })
+                    .show();
         }
     }
 
     private void publishAction(Date now){
-        Article publishArticle;
-        int saveArticleTask;
+        int newArticleId;
         if (!checkNotChangeArticle() || !sameImg()){
             publishArticle = new Article(
                     ly_category.getSelectedItem().toString(),
@@ -196,27 +218,37 @@ public class EditArticleFragment extends Fragment {
                     et_subtitle.getText().toString(),
                     userId
             );
-            if (((BitmapDrawable)iv_image.getDrawable()).getBitmap()!=null){
+            if (null!=iv_image.getDrawable()){
                 String thumbnail = SerializationUtils.imgToBase64String(
                         ((BitmapDrawable)iv_image.getDrawable()).getBitmap());
                 try {
                     publishArticle.addImage(thumbnail, EMPTY_IMG_DES);
+                    publishArticle.setThumbnail(thumbnail);
                 } catch (ServerCommunicationError serverCommunicationError) {
                     Log.e("Add Image Error", serverCommunicationError.getMessage());
                     utils.showInfoDialog(getContext(), "Error adding the image");
                 }
             }
             publishArticle.setLastUpdate(now);
-
+            layoutInflater = getActivity().getLayoutInflater();
+            loading =  new AlertDialog.Builder(getActivity())
+                    .setView(layoutInflater.inflate(R.layout.fullscreen_loading_dialog,null))
+                    .setCancelable(false).create();
+            loading.show();
             try {
-                saveArticleTask = new SaveArticleTask().execute(publishArticle).get();
-                if (saveArticleTask==-1){
+                newArticleId = new SaveArticleTask().execute(publishArticle).get();
+                if (newArticleId==-1){
                     utils.showInfoDialog(getContext(), "Error publishing the article, try again");
+                }else {
+                    publishArticle.setId(newArticleId);
                 }
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
                 utils.showInfoDialog(getContext(), "Error publishing the article, try again");
             }
+            loading.dismiss();
+
+
         }else {
             utils.showInfoDialog(getContext(),"Not content to update!");
         }
@@ -225,11 +257,17 @@ public class EditArticleFragment extends Fragment {
 
 
     private boolean checkNotChangeArticle(){
-        return article.getCategory().equals(ly_category.getSelectedItem().toString())&&
-                article.getTitleText().equals(et_title.getText().toString())&&
-                article.getAbstractText().equals(et_abstract.getText().toString())&&
-                article.getBodyText().equals(et_body.getText().toString())&&
-                article.getSubtitleText().equals(et_subtitle.getText().toString());
+        boolean res;
+        if(article==null){
+            res = false;
+        }else {
+            res =  article.getCategory().equals(ly_category.getSelectedItem().toString())&&
+                    article.getTitleText().equals(et_title.getText().toString())&&
+                    article.getAbstractText().equals(et_abstract.getText().toString())&&
+                    article.getBodyText().equals(et_body.getText().toString())&&
+                    article.getSubtitleText().equals(et_subtitle.getText().toString());
+        }
+        return res;
     }
 
     private boolean sameImg(){
@@ -243,5 +281,19 @@ public class EditArticleFragment extends Fragment {
         return false;
     }
 
+    private void updateFromTheMainList(){
+        List<Article> articles = ((MainActivity)getActivity()).getArticles();
+        List<Article> newArticles = new ArrayList<>();
+        if(article != null){
+            for(Article auxArticle : articles){
+                if (auxArticle.getId() != oldArticleId){
+                    newArticles.add(auxArticle);
+                }
+            }
+            newArticles.add(publishArticle);
+            newArticles = utils.sortArticlesByDates(newArticles);
+            ((MainActivity)getActivity()).setArticles(newArticles);
+        }
+    }
 
 }

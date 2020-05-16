@@ -123,7 +123,6 @@ public class HomeFragment extends Fragment {
                                     utils.showInfoDialog(getContext(),"Error deleting article with id: "+articleId);
                                 }else {
                                     articles.remove(position);
-                                    rv.removeViewAt(position);
                                     adapter.notifyItemRemoved(position);
                                     adapter.notifyItemRangeChanged(position, articles.size());
                                     ((MainActivity)getActivity()).setArticles(articles);
@@ -148,13 +147,13 @@ public class HomeFragment extends Fragment {
             credentials.add(0,user);
             credentials.add(1,pwd);
             try {
-                loginSuccess = new LoginTask(getActivity()).execute(credentials).get();
+                loginSuccess = new LoginTask().execute(credentials).get();
             } catch (ExecutionException | InterruptedException e) {
                 loginSuccess = false;
             }
         }
         try {
-            articles = new AllArticlesTask(getActivity()).execute().get();
+            articles = new AllArticlesTask().execute().get();
         }catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
