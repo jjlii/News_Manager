@@ -24,27 +24,27 @@ public class BBDDArticle {
         ArrayList<Article> result = new ArrayList<>();
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.query(BBDDVariables.BBDD_TITLE,
+        Cursor cursor = db.query(BBDDVariables.BBDD_TABLE,
                 null,null,null,null,
                 null,null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
-            long id = cursor.getLong(0);
-            long idUser= cursor.getLong(1);
-            String title= cursor.getString(2);
-            String subtitle= cursor.getString(3);
-            String abstact= cursor.getString(4);
-            String category = cursor.getString(5);
+            Integer id = cursor.getInt(1);
+            String idUser= cursor.getString(2);
+            String title= cursor.getString(3);
+            String subtitle= cursor.getString(4);
+            String category= cursor.getString(5);
+            String abstact = cursor.getString(6);
             String body = cursor.getString(7);
             String thumbnail = cursor.getString(8);
-            long datetime = cursor.getLong(9);
-            Date d = new Date(datetime);
+            String datetime = cursor.getString(9);
+            Date d = new Date(Long.parseLong(datetime));
 
-            Article a = new Article(category, title, abstact, body, subtitle, (int) idUser);
+            Article a = new Article(category, title, abstact, body, subtitle, idUser);
             a.setThumbnail(thumbnail);
             a.setLastUpdate(d);
-            a.setId((int) id);
+            a.setId(id);
             result.add(a);
 
             cursor.moveToNext();
@@ -54,17 +54,18 @@ public class BBDDArticle {
     }
 
 
-    public static void newArticle(Article a){
+    public static void newArticle(@org.jetbrains.annotations.NotNull Article a){
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(BBDDVariables.BBDD_ID_USER, Long.valueOf(a.getIdUser()));
+        values.put(BBDDVariables.BBDD_ID_ARTICULO, a.getId());
+        values.put(BBDDVariables.BBDD_ID_USER, a.getIdUser());
         values.put(BBDDVariables.BBDD_TITLE, a.getTitleText());
         values.put(BBDDVariables.BBDD_SUBTITLE, a.getSubtitleText());
         values.put(BBDDVariables.BBDD_CATEGORY, a.getCategory());
         values.put(BBDDVariables.BBDD_ABSTRACT, a.getAbstractText());
         values.put(BBDDVariables.BBDD_BODY, a.getBodyText());
         values.put(BBDDVariables.BBDD_THUMBNAIL, a.getThumbnail());
-        values.put(BBDDVariables.BBDD_DATE, a.getLastUpdate().getTime());
+        values.put(BBDDVariables.BBDD_DATE, Long.toString(a.getLastUpdate().getTime()));
 
         long insertId = db.insert(BBDDVariables.BBDD_TABLE, null, values);
 

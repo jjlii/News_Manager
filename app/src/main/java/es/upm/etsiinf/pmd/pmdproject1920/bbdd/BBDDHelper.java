@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class BBDDHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "messages";
-    private static final int DATABASE_VERSION = 3;
+    private static final String DATABASE_NAME = "BBDDArticulos";
+    private static final int DATABASE_VERSION = 1;
 
     public BBDDHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -18,7 +18,8 @@ public class BBDDHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL(BBDDVariables.SQL_DELETE_ENTRIES);
+        onCreate(db);
     }
 
 }
