@@ -20,13 +20,10 @@ public class BBDDHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(Article a) {
-        if(BBDDArticle.deleteArticle(a.getId())) {
-            BBDDArticle.insertArticle(a);
-        }
-        else{
-            Toast.makeText(getContext(), "El articulo no ha podido ser actualizado", Toast.LENGTH_LONG);
-        }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL( BBDDVariables.SQL_DELETE_ENTRIES );
+        onCreate(db);
     }
+
 
 }

@@ -59,7 +59,26 @@ public class BBDDArticle {
         return db.delete(BBDDVariables.BBDD_TABLE, BBDDVariables.BBDD_ID_ARTICULO + "=" + id, null) > 0;
     }
 
-    public static void insertArticle(@org.jetbrains.annotations.NotNull Article a){
+
+     public void updateArticulo(Article a) {
+         db = helper.getWritableDatabase();
+         String where = BBDDVariables.BBDD_ID_ARTICULO + "= ?";
+         ContentValues values = new ContentValues();
+         values.put(BBDDVariables.BBDD_TITLE, a.getTitleText());
+         values.put(BBDDVariables.BBDD_SUBTITLE, a.getSubtitleText());
+         values.put(BBDDVariables.BBDD_CATEGORY, a.getCategory());
+         values.put(BBDDVariables.BBDD_ABSTRACT, a.getAbstractText());
+         values.put(BBDDVariables.BBDD_BODY, a.getBodyText());
+         values.put(BBDDVariables.BBDD_THUMBNAIL, a.getThumbnail());
+         values.put(BBDDVariables.BBDD_DATE, Long.toString(a.getLastUpdate().getTime()));
+         db.update(BBDDVariables.BBDD_TABLE, values, where, new String[]{
+                 String.valueOf(a.getId())
+         });
+         db.close();
+     }
+
+
+    public static void insertArticle(Article a){
         db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(BBDDVariables.BBDD_ID_ARTICULO, a.getId());

@@ -160,7 +160,7 @@ public class HomeFragment extends Fragment {
           
             if(articles.isEmpty()){//comprueba si habia articulos en la bbdd
 
-                articles = new AllArticlesTask(getActivity()).execute().get();
+                articles = new AllArticlesTask().execute().get();
                 for(Article article: articles)BBDDArticle.insertArticle(article);//si no los había los mete
 
             }
