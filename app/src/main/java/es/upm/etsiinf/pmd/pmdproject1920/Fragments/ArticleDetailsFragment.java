@@ -49,11 +49,15 @@ public class ArticleDetailsFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            img = SerializationUtils.base64StringToImg(article.getImage().getImage());
+            if(null != article.getImage()){
+                img = SerializationUtils.base64StringToImg(article.getImage().getImage());
+            }
         } catch (ServerCommunicationError serverCommunicationError) {
             serverCommunicationError.printStackTrace();
         }
-        iv_detail_img.setImageBitmap(img);
+        if (null != img){
+            iv_detail_img.setImageBitmap(img);
+        }
         tv_category_detail.setText(article.getCategory());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             tv_title_detail.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));

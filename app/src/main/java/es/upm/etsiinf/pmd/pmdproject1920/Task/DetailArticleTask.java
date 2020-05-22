@@ -17,13 +17,10 @@ public class DetailArticleTask  extends AsyncTask<String, Void, Article>{
     protected Article doInBackground(String... articleId) {
         Article res = null;
         int id = Integer.parseInt(articleId[0]);
-        if (ModelManager.isConnected()) {
-            try {
-                res = ModelManager.getArticle(id);
-            } catch (ServerCommunicationError serverCommunicationError) {
-                serverCommunicationError.printStackTrace();
-            }
-
+        try {
+            res = ModelManager.getArticle(id);
+        } catch (ServerCommunicationError serverCommunicationError) {
+            serverCommunicationError.printStackTrace();
         }
         return res;
     }
