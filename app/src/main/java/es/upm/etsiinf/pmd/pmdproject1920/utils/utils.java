@@ -1,6 +1,9 @@
 package es.upm.etsiinf.pmd.pmdproject1920.utils;
 
 import android.app.AlertDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 
 import java.util.Collections;
@@ -12,6 +15,8 @@ import es.upm.etsiinf.pmd.pmdproject1920.Task.DeleteArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 
 public class utils {
+
+    public static final int SCHEDULE_SERVICE_ID = 0;
 
     public static void showInfoDialog(Context context, String msg){
         new AlertDialog.Builder(context)
@@ -40,6 +45,20 @@ public class utils {
             }
         });
         return articles;
+    }
+
+    public static void scheduleJob(Context context){
+        ComponentName serviceComponent = new ComponentName(context, ScheduleService.class);
+
+
+
+        JobInfo.Builder builder = new JobInfo.Builder(SCHEDULE_SERVICE_ID, serviceComponent);
+
+        builder.setMinimumLatency(300000);
+        builder.setOverrideDeadline(480000);
+        JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
+        jobScheduler.schedule(builder.build());
+
     }
 
 

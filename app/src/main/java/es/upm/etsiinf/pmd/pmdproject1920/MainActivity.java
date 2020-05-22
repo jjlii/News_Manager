@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        utils.scheduleJob(this);
         setContentView(R.layout.activity_main);
         bottom_navigation = findViewById(R.id.bottom_navigation);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
