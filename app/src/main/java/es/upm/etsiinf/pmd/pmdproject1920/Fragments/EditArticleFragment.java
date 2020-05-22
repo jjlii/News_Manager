@@ -113,14 +113,14 @@ public class EditArticleFragment extends Fragment {
             public void onClick(View v) {
                 new AlertDialog.Builder(getContext())
                         .setTitle(btn_save.getText())
-                        .setMessage("Do you want to save change?")
+                        .setMessage("Do you want to save the changes?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 publishProcess();
                             }
                         })
-                        .setNegativeButton("Ok", null)
+                        .setNegativeButton("Cancel", null)
                         .show();
             }
         });

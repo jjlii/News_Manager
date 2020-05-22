@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void sendNotification () {
+
+    public void sendNotification () {
         String title = "titulo";
         String msg = "mensaje";
         Notification.Builder nb = notificationHandler.createNotification(title, msg);

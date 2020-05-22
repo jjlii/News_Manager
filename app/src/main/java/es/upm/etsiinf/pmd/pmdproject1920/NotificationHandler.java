@@ -74,7 +74,7 @@ public class NotificationHandler extends ContextWrapper {
                 .setAutoCancel(true);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void publishNotificationGroup () {
         String channelID = CHANNEL_LOW_ID;
 

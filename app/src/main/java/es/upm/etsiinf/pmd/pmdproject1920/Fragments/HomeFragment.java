@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -104,6 +106,7 @@ public class HomeFragment extends Fragment {
         adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                ((MainActivity)getActivity()).sendNotification();
                 findNavController(view).navigate(HomeFragmentDirections.actionHomeToArticleDetail(articles.get(position).getId()));
             }
 
