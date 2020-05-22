@@ -72,7 +72,7 @@ public class LogInFragment extends Fragment {
                 }
                 if (!user.equals("") && !pwd.equals("")){
                     try {
-                        loginSuccess = new LoginTask(getActivity()).execute(credentials).get();
+                        loginSuccess = new LoginTask().execute(credentials).get();
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                         loginSuccess = false;

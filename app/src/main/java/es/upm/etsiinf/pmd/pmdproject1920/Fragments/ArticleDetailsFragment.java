@@ -44,23 +44,30 @@ public class ArticleDetailsFragment extends Fragment {
         int articleId = getArguments().getInt("articleId");
         Bitmap img = null;
         try {
-            article = new DetailArticleTask(getActivity()).execute(Integer.toString(articleId)).get();
+            article = new DetailArticleTask().execute(Integer.toString(articleId)).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         try {
-            img = SerializationUtils.base64StringToImg(article.getImage().getImage());
+            if(null != article.getImage()){
+                img = SerializationUtils.base64StringToImg(article.getImage().getImage());
+            }
         } catch (ServerCommunicationError serverCommunicationError) {
             serverCommunicationError.printStackTrace();
         }
-        iv_detail_img.setImageBitmap(img);
+        if (null != img){
+            iv_detail_img.setImageBitmap(img);
+        }
         tv_category_detail.setText(article.getCategory());
-        tv_title_detail.setText(article.getTitleText());
-        tv_subtitle_detail.setText(article.getSubtitleText());
-        tv_abstract_detail.setText(article.getAbstractText());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tv_title_detail.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+            tv_subtitle_detail.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+            tv_abstract_detail.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
             tv_body_detail.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
         }else {
+            tv_title_detail.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
+            tv_subtitle_detail.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>"));
+            tv_abstract_detail.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
             tv_body_detail.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
         }
         tv_author_value.setText(Integer.toString(article.getIdUser()));

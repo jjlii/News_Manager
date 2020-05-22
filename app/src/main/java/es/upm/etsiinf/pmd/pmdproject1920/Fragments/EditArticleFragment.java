@@ -1,64 +1,70 @@
 package es.upm.etsiinf.pmd.pmdproject1920.Fragments;
 
-import android.app.Activity;
-import android.app.DownloadManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.DetailArticleTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.SaveArticleTask;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.SaveImageTask;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+import es.upm.etsiinf.pmd.pmdproject1920.model.Image;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
-import static androidx.core.app.ActivityCompat.startActivityForResult;
+import static android.app.Activity.RESULT_OK;
 
 public class EditArticleFragment extends Fragment {
+
+    private static final int PICK_IMAGE = 100;
+    private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd hh:mm:ss";
+    private static final String EMPTY_IMG_DES = "";
 
     private Article article;
     private TextInputEditText et_title, et_subtitle, et_abstract, et_body;
     private Spinner ly_category;
     private ImageView iv_image;
-    private Button btn_cancel;
+    private Button btn_cancel, btn_load_picture, btn_save;
+    private String userId;
+    private int oldArticleId = -1;
+    private AlertDialog loading;
+    private LayoutInflater layoutInflater;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        userId = ModelManager.getIdUser();
         ArrayList<String> items = new ArrayList<String>(Arrays.asList(
                 "Economy",
                 "National",
@@ -66,14 +72,24 @@ public class EditArticleFragment extends Fragment {
                 "Technology"));
         Bitmap img = null;
         if (article != null){
+            btn_save.setText(R.string.save);
+            userId = String.valueOf(article.getIdUser());
+            oldArticleId = article.getId();
             et_title.setText(article.getTitleText());
             et_subtitle.setText(article.getSubtitleText());
             et_abstract.setText(article.getAbstractText());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-            }else {
-                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
-            }
+            et_body.setText(article.getBodyText());
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
+//            }else {
+//                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
+//                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>"));
+//                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
+//                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
+//            }
             ly_category.setSelection(items.indexOf(article.getCategory()));
             try {
                 img = SerializationUtils.base64StringToImg(article.getImage().getImage());
@@ -81,14 +97,44 @@ public class EditArticleFragment extends Fragment {
                 serverCommunicationError.printStackTrace();
             }
             iv_image.setImageBitmap(img);
+        }else {
+
         }
+
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(btn_save.getText())
+                        .setMessage("Do you want to save change?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                publishProcess();
+                            }
+                        })
+                        .setNegativeButton("Ok", null)
+                        .show();
+            }
+        });
+
+
+
+        btn_load_picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    openGallery();
+            }
+        });
     }
+
 
     @Override
     public View onCreateView( LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
@@ -98,7 +144,7 @@ public class EditArticleFragment extends Fragment {
         int articleId = getArguments().getInt("articleId");
         if (articleId!=-1){
             try {
-                article = new DetailArticleTask(getActivity()).execute(Integer.toString(articleId)).get();
+                article = new DetailArticleTask().execute(Integer.toString(articleId)).get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -110,34 +156,146 @@ public class EditArticleFragment extends Fragment {
         ly_category = view.findViewById(R.id.ly_category);
         iv_image = view.findViewById(R.id.iv_image);
         btn_cancel = view.findViewById(R.id.btn_cancel);
-        /*
-        setContentView(R.layout.activity_main);
-        imageView = (ImageView)findViewById(R.id.imageView);
-        button = (Button)findViewById(R.id.ly_buttonLoadPicture);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
-        */
+        btn_load_picture = view.findViewById(R.id.btn_load_picture);
+        btn_save = view.findViewById(R.id.btn_save);
         return view;
     }
-    /* Galeria
-    ImageView imageView;
-    Button button;
-    private static final int PICK_IMAGE = 100;
-    Uri imageUri;
+
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            Uri imageUri;
             imageUri = data.getData();
-            imageView.setImageURI(imageUri);
+            iv_image.setImageURI(imageUri);
         }
-    }*/
+    }
+
+
+
+    private void publishProcess(){
+        SimpleDateFormat sdfDate = new SimpleDateFormat(DATE_FORMAT_MYSQL);
+        Date now = new Date();
+        String nowStr = sdfDate.format(now);
+        try {
+            now = SerializationUtils.dateFromString(nowStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (et_title.getText().toString().equals(""))
+            et_title.setError("The Title is mandatory");
+        else if (et_subtitle.getText().toString().equals(""))
+            et_subtitle.setError("The Subtitle is mandatory");
+        else if (et_abstract.getText().toString().equals(""))
+            et_abstract.setError("The Abstract is mandatory");
+        else if (et_body.getText().toString().equals(""))
+            et_body.setError("The Body is mandatory");
+        else {
+            publishAction(now);
+        }
+    }
+
+    private void publishAction(Date now){
+        int newArticleId;
+        if (!checkNotChangeArticle()){
+            if(article != null){
+                article.setCategory(ly_category.getSelectedItem().toString());
+                article.setTitleText(et_title.getText().toString());
+                article.setAbstractText(et_abstract.getText().toString());
+                article.setBodyText(et_body.getText().toString());
+                article.setSubtitleText(et_subtitle.getText().toString());
+            }else {
+                article = new Article(
+                        ly_category.getSelectedItem().toString(),
+                        et_title.getText().toString(),
+                        et_abstract.getText().toString(),
+                        et_body.getText().toString(),
+                        et_subtitle.getText().toString(),
+                        userId
+                );
+            }
+            if (null!=iv_image.getDrawable()){
+                String thumbnail = SerializationUtils.imgToBase64String(
+                        ((BitmapDrawable)iv_image.getDrawable()).getBitmap());
+                try {
+                    article.addImage(thumbnail, EMPTY_IMG_DES);
+                    article.setThumbnail(thumbnail);
+                } catch (ServerCommunicationError serverCommunicationError) {
+                    Log.e("Add Image Error", serverCommunicationError.getMessage());
+                    utils.showInfoDialog(getContext(), "Error adding the image");
+                }
+            }
+            article.setLastUpdate(now);
+            layoutInflater = getActivity().getLayoutInflater();
+            loading =  new AlertDialog.Builder(getActivity())
+                    .setView(layoutInflater.inflate(R.layout.fullscreen_loading_dialog,null))
+                    .setCancelable(false).create();
+            loading.show();
+            try {
+                newArticleId = new SaveArticleTask().execute(article).get();
+                if (oldArticleId ==-1){
+                    article.setId(newArticleId);
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            loading.dismiss();
+            updateFromTheMainList();
+        }else {
+            utils.showInfoDialog(getContext(),"Not content to update!");
+        }
+    }
+
+
+
+    private boolean checkNotChangeArticle(){
+        boolean res;
+        if(article==null){
+            res = false;
+        }else {
+            res =  article.getCategory().equals(ly_category.getSelectedItem().toString())&&
+                    article.getTitleText().equals(et_title.getText().toString())&&
+                    article.getAbstractText().equals(et_abstract.getText().toString())&&
+                    article.getBodyText().equals(et_body.getText().toString())&&
+                    article.getSubtitleText().equals(et_subtitle.getText().toString());
+        }
+        return res;
+    }
+
+
+    private void updateFromTheMainList(){
+        List<Article> articles = ((MainActivity)getActivity()).getArticles();
+        if(oldArticleId != -1){
+            List<Article> newArticles = new ArrayList<>();
+            for(Article auxArticle : articles){
+                if (auxArticle.getId() != oldArticleId){
+                    newArticles.add(auxArticle);
+                }
+            }
+            newArticles.add(article);
+            newArticles = utils.sortArticlesByDates(newArticles);
+            ((MainActivity)getActivity()).setArticles(newArticles);
+        }else {
+            articles.add(article);
+            articles = utils.sortArticlesByDates(articles);
+            ((MainActivity)getActivity()).setArticles(articles);
+        }
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Success")
+                .setMessage("Article is "+btn_save.getText()).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().onBackPressed();
+            }
+        })
+                .show();
+    }
+
 }

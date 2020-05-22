@@ -28,6 +28,7 @@
     <string name="select_image">Select Image</string>
     <string name="save">SAVE</string>
     <string name="cancel">CANCEL</string>
+    <string name="create">CREATE</string>
     <string name="news">News</string>
     <string name="log_out_success">Log Out Success</string>
     <string name="ok">OK</string>

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,22 +54,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         final Article article  = articles.get(position);
         holder.news_title.setText(article.getTitleText());
         holder.news_abstract.setText(article.getAbstractText());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.news_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
+            holder.news_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
+        }else {
+            holder.news_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
+            holder.news_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
+        }
         holder.news_category.setText(article.getCategory());
         Bitmap img = SerializationUtils.base64StringToImg(article.getThumbnail());
         holder.imageView.setImageBitmap(img);
         holder.bt_rm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Delete the article")
-                        .setMessage("Are you sure that you want to delete the article?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(context, "Delete the article 123", Toast.LENGTH_LONG).show();
-                            }
-                        }).setNegativeButton("No", null)
-                        .show();
+                onItemClickListener.onDeleteItemClick(v, article.getId(), holder.getAdapterPosition());
             }
         });
         holder.bt_edit.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +86,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     public interface OnItemClickListener{
         void onItemClick(View view, int position);
         void onEditItemClick(View view, int position);
+        void onDeleteItemClick(View view, int articleId, int position);
     }
 
     public class  MyViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener{

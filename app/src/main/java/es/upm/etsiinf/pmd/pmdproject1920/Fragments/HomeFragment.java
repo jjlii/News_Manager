@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
 import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -112,9 +111,34 @@ public class HomeFragment extends Fragment {
             public void onEditItemClick(View view, int position) {
                 findNavController(view).navigate(HomeFragmentDirections.actionHomeToEditArticle(articles.get(position).getId()));
             }
+
+            @Override
+            public void onDeleteItemClick(View view, final int articleId, final int position) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete the article")
+                        .setMessage("Are you sure that you want to delete the article?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                boolean deleteRes = utils.deleteAction(Integer.toString(articleId));
+                                if(!deleteRes){
+                                    utils.showInfoDialog(getContext(),"Error deleting article with id: "+articleId);
+                                }else {
+                                    articles.remove(position);
+                                    adapter.notifyItemRemoved(position);
+                                    adapter.notifyItemRangeChanged(position, articles.size());
+                                    ((MainActivity)getActivity()).setArticles(articles);
+                                    utils.showInfoDialog(getContext(),"The article with id: "+articleId+" is deleted");
+                                }
+                            }
+                        }).setNegativeButton("No", null)
+                        .show();
+            }
         });
         rv.setAdapter(adapter);
     }
+
+
 
     private void getArticles()  {
         boolean loginSuccess = false;
@@ -125,14 +149,15 @@ public class HomeFragment extends Fragment {
             credentials.add(0,user);
             credentials.add(1,pwd);
             try {
-                loginSuccess = new LoginTask(getActivity()).execute(credentials).get();
+                loginSuccess = new LoginTask().execute(credentials).get();
             } catch (ExecutionException | InterruptedException e) {
                 loginSuccess = false;
             }
         }
         try {
-            articles = BBDDArticle.loadAllArticles();//carga todos los ariculos de la BBDD//problemas; no se vuelve a cargar nunca más, hay que buscar manera eficiente de recargar esta kk
-            //tengo alguna idea pero me parecen mierda, prefiero no meterlas y consultarla con el resto
+          
+            articles = BBDDArticle.loadAllArticles();
+          
             if(articles.isEmpty()){//comprueba si habia articulos en la bbdd
 
                 articles = new AllArticlesTask(getActivity()).execute().get();
@@ -151,6 +176,8 @@ public class HomeFragment extends Fragment {
         user = preferences.getString("pref_user", null);
         pwd =  preferences.getString("pref_pwd", null);
     }
+
+
 
 
 }

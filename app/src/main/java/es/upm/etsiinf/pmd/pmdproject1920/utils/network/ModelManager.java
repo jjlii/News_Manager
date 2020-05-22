@@ -275,7 +275,7 @@ public class ModelManager {
         return result;
     }
 
-    private static int saveArticle(Article a) throws ServerCommunicationError{
+    public static int saveArticle(Article a) throws ServerCommunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "article";
@@ -311,7 +311,7 @@ public class ModelManager {
         }
     }
 
-    private static void deleteArticle(int idArticle) throws ServerCommunicationError{
+    public static void deleteArticle(int idArticle) throws ServerCommunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "article/" + idArticle;
@@ -342,7 +342,7 @@ public class ModelManager {
         }
     }
 
-    private static int saveImage(Image i) throws ServerCommunicationError{
+    public static int saveImage(Image i) throws ServerCommunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "article/image";
@@ -379,7 +379,7 @@ public class ModelManager {
         }
     }
 
-    private static void deleteImage(int idArticle) throws ServerCommunicationError{
+    public static void deleteImage(int idArticle) throws ServerCommunicationError{
         try{
             String parameters =  "";
             String request = rc.serviceUrl + "image/" + idArticle;

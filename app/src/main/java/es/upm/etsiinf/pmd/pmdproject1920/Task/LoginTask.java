@@ -18,24 +18,6 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.Authentication
 
 public class LoginTask extends AsyncTask<List<String>, Void, Boolean> {
 
-    private AlertDialog alertDialog;
-    @SuppressLint("StaticFieldLeak")
-    private Activity activity;
-    public LoginTask(Activity myActivity){
-        activity=myActivity;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        LayoutInflater i = activity.getLayoutInflater();
-        alertDialog = new AlertDialog.Builder(activity)
-                .setView(i.inflate(R.layout.fullscreen_loading_dialog,null))
-                .setCancelable(true)
-                .create();
-        alertDialog.show();
-    }
-
     @Override
     protected Boolean doInBackground(List<String>... credentials) {
         try {
@@ -43,14 +25,6 @@ public class LoginTask extends AsyncTask<List<String>, Void, Boolean> {
             return true;
         } catch (AuthenticationError e) {
             return false;
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-        if (alertDialog.isShowing()){
-            alertDialog.dismiss();
         }
     }
 }
