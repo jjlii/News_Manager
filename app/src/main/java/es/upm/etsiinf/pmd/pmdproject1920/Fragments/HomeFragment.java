@@ -25,6 +25,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.AllArticlesTask;
 import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.LoginTask;
+import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
@@ -91,6 +92,7 @@ public class HomeFragment extends Fragment {
         });
         ((MainActivity)getActivity()).setLoading(true);
         getArticles();
+
         showRecyclerView();
         ((MainActivity)getActivity()).setLoading(false);
     }
@@ -153,7 +155,15 @@ public class HomeFragment extends Fragment {
             }
         }
         try {
-            articles = new AllArticlesTask().execute().get();
+          
+            articles = BBDDArticle.loadAllArticles();
+          
+            if(articles.isEmpty()){//comprueba si habia articulos en la bbdd
+
+                articles = new AllArticlesTask(getActivity()).execute().get();
+                for(Article article: articles)BBDDArticle.insertArticle(article);//si no los había los mete
+
+            }
         }catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

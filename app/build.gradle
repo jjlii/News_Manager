@@ -42,5 +42,6 @@ dependencies {
 
     //Lottie
     implementation 'com.airbnb.android:lottie:3.0.7'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 
 }
