@@ -3,17 +3,21 @@ package es.upm.etsiinf.pmd.pmdproject1920;
 
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import android.app.Notification;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     Boolean isOpen = false;
 
+    int counter = 0;
+    private NotificationHandler notificationHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         bottom_navigation = findViewById(R.id.bottom_navigation);
         NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottom_navigation, navController);
+        notificationHandler = new NotificationHandler(this);
         fb_create = findViewById(R.id.fb_create);
         fb_log_out = findViewById(R.id.fb_log_out);
         fb_action = findViewById(R.id.fb_action);
@@ -144,6 +152,15 @@ public class MainActivity extends AppCompatActivity {
             loading.setVisibility(View.GONE);
             main_content.setVisibility(View.VISIBLE);
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void sendNotification () {
+        String title = "titulo";
+        String msg = "mensaje";
+        Notification.Builder nb = notificationHandler.createNotification(title, msg);
+        notificationHandler.getManager().notify(counter++, nb.build());
+        notificationHandler.publishNotificationGroup();
     }
 
 
