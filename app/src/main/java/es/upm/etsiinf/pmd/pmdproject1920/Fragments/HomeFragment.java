@@ -155,9 +155,11 @@ public class HomeFragment extends Fragment {
             }
         }
         try {
-          
-            articles = BBDDArticle.loadAllArticles();
-          
+            if(ModelManager.isConnected()){
+                articles = BBDDArticle.loadUserArticles(ModelManager.getLoggedIdUSer());
+            }else {
+                articles = BBDDArticle.loadAllArticles();
+            }
             if(articles.isEmpty()){//comprueba si habia articulos en la bbdd
 
                 articles = new AllArticlesTask().execute().get();

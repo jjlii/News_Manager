@@ -53,6 +53,42 @@ public class BBDDArticle {
 
         return result;
     }
+    public static List<Article> loadUserArticles(String idU){
+        ArrayList<Article> result = new ArrayList<>();
+
+        db = helper.getReadableDatabase();
+        Cursor cursor = db.query(BBDDVariables.BBDD_TABLE,
+                null,null,null,null,
+                null,null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            String idUser= cursor.getString(2);
+            if(idU != idUser){
+                cursor.moveToNext();
+                break;
+            }
+            Integer id = cursor.getInt(1);
+            String title= cursor.getString(3);
+            String subtitle= cursor.getString(4);
+            String category= cursor.getString(5);
+            String abstact = cursor.getString(6);
+            String body = cursor.getString(7);
+            String thumbnail = cursor.getString(8);
+            String datetime = cursor.getString(9);
+            Date d = new Date(Long.parseLong(datetime));
+
+            Article a = new Article(category, title, abstact, body, subtitle, idUser);
+            a.setThumbnail(thumbnail);
+            a.setLastUpdate(d);
+            a.setId(id);
+            result.add(a);
+
+            cursor.moveToNext();
+        }
+
+        return result;
+    }
 
     public static boolean deleteArticle(Integer id)
     {
