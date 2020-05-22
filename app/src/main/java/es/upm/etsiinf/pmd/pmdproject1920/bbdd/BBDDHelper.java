@@ -2,6 +2,9 @@ package es.upm.etsiinf.pmd.pmdproject1920.bbdd;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+
+import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 
 public class BBDDHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "BBDDArticulos";
@@ -17,9 +20,13 @@ public class BBDDHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(BBDDVariables.SQL_DELETE_ENTRIES);
-        onCreate(db);
+    public void onUpgrade(Article a) {
+        if(BBDDArticle.deleteArticle(a.getId())) {
+            BBDDArticle.insertArticle(a);
+        }
+        else{
+            Toast.makeText(getContext(), "El articulo no ha podido ser actualizado", Toast.LENGTH_LONG);
+        }
     }
 
 }

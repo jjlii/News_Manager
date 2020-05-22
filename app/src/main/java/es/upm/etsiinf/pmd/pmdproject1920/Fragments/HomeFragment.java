@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
             if(articles.isEmpty()){//comprueba si habia articulos en la bbdd
 
                 articles = new AllArticlesTask(getActivity()).execute().get();
-                for(Article article: articles)BBDDArticle.newArticle(article);//si no los había los mete
+                for(Article article: articles)BBDDArticle.insertArticle(article);//si no los había los mete
 
             }
         }catch (ExecutionException | InterruptedException e) {

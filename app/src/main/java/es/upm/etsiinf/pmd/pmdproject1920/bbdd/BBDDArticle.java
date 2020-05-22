@@ -15,6 +15,7 @@ import java.util.List;
 public class BBDDArticle {
 
     private static BBDDHelper helper;
+    private static SQLiteDatabase db;
 
     public static void init(Context c){
         helper = new BBDDHelper(c);
@@ -23,7 +24,7 @@ public class BBDDArticle {
     public static List<Article> loadAllArticles(){
         ArrayList<Article> result = new ArrayList<>();
 
-        SQLiteDatabase db = helper.getReadableDatabase();
+        db = helper.getReadableDatabase();
         Cursor cursor = db.query(BBDDVariables.BBDD_TABLE,
                 null,null,null,null,
                 null,null);
@@ -53,9 +54,13 @@ public class BBDDArticle {
         return result;
     }
 
+    public static boolean deleteArticle(Integer id)
+    {
+        return db.delete(BBDDVariables.BBDD_TABLE, BBDDVariables.BBDD_ID_ARTICULO + "=" + id, null) > 0;
+    }
 
-    public static void newArticle(@org.jetbrains.annotations.NotNull Article a){
-        SQLiteDatabase db = helper.getWritableDatabase();
+    public static void insertArticle(@org.jetbrains.annotations.NotNull Article a){
+        db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(BBDDVariables.BBDD_ID_ARTICULO, a.getId());
         values.put(BBDDVariables.BBDD_ID_USER, a.getIdUser());
