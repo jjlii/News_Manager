@@ -3,23 +3,19 @@ package es.upm.etsiinf.pmd.pmdproject1920;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 
 public class NotificationHandler extends ContextWrapper {
     private NotificationManager manager;
 
-    public static final String CHANNEL_LOW_ID ="1";
-    private final String CHANNEL_LOW_NAME = "LOW CHANNEL";
+    public static final String MY_CHANNEL_ID ="1";
+    private final String MY_CHANNEL_NAME = "LOW CHANNEL";
 
     public static final int GROUP_ID = 1;
     private final String GROUP_NAME = "GROUP";
@@ -33,21 +29,21 @@ public class NotificationHandler extends ContextWrapper {
         if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.O) {
             // Create channel
 
-            NotificationChannel lowChannel = new NotificationChannel(CHANNEL_LOW_ID, CHANNEL_LOW_NAME, NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel lowChannel = new NotificationChannel(MY_CHANNEL_ID, MY_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
             lowChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
             getManager().createNotificationChannel(lowChannel);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public Notification.Builder createNotification (String title, String msg) {
         if (Build.VERSION.SDK_INT >= 26)
-            return createNotificationWithChannels(title, msg, CHANNEL_LOW_ID);
-        return createNotificationWithChannels(title, msg, CHANNEL_LOW_ID);
+            return createNotificationWithChannels(title, msg, MY_CHANNEL_ID);
+        return createNotificationWithChannels(title, msg, MY_CHANNEL_ID);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     private Notification.Builder createNotificationWithChannels (String title, String msg, String channelID) {
         /*Intent intent = new Intent(this, notificationActivity.class);
         intent.putExtra("title", title);
@@ -64,24 +60,21 @@ public class NotificationHandler extends ContextWrapper {
         return new Notification.Builder(getApplicationContext(), channelID)
                 .setContentTitle(title)
                 .setContentText(msg)
-                //.setContentIntent(pendingIntent)
-                //.setActions(action)
-                //.setLargeIcon(my_image)
-                //.setStyle(new Notification.BigPictureStyle().bigPicture(my_image).bigLargeIcon((Bitmap) null))
                 .setStyle(new Notification.BigTextStyle().bigText(msg))
                 .setGroup(GROUP_NAME)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setAutoCancel(true);
+                ;
     }
 
 
     public void publishNotificationGroup () {
-        String channelID = CHANNEL_LOW_ID;
+        String channelID = MY_CHANNEL_ID;
 
         Notification groupNotification = new Notification.Builder(getApplicationContext(), channelID)
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setGroup(GROUP_NAME)
                 .setGroupSummary(true)
+                .setGroupAlertBehavior(Notification.GROUP_ALERT_CHILDREN)
                 .build();
         getManager().notify(GROUP_ID, groupNotification);
     }

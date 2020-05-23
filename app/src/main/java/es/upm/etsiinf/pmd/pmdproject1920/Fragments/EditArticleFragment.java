@@ -36,6 +36,7 @@ import es.upm.etsiinf.pmd.pmdproject1920.R;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.DetailArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.SaveArticleTask;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.SaveImageTask;
+import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Image;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.SerializationUtils;
@@ -58,8 +59,6 @@ public class EditArticleFragment extends Fragment {
     private Button btn_cancel, btn_load_picture, btn_save;
     private String userId;
     private int oldArticleId = -1;
-    private AlertDialog loading;
-    private LayoutInflater layoutInflater;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -79,17 +78,6 @@ public class EditArticleFragment extends Fragment {
             et_subtitle.setText(article.getSubtitleText());
             et_abstract.setText(article.getAbstractText());
             et_body.setText(article.getBodyText());
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-//                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-//                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-//                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>", Html.FROM_HTML_MODE_COMPACT));
-//            }else {
-//                et_title.setText(Html.fromHtml("<h2>"+article.getTitleText()+"</h2>"));
-//                et_subtitle.setText(Html.fromHtml("<h2>"+article.getSubtitleText()+"</h2>"));
-//                et_abstract.setText(Html.fromHtml("<h2>"+article.getAbstractText()+"</h2>"));
-//                et_body.setText(Html.fromHtml("<h2>"+article.getBodyText()+"</h2>"));
-//            }
             ly_category.setSelection(items.indexOf(article.getCategory()));
             try {
                 img = SerializationUtils.base64StringToImg(article.getImage().getImage());
@@ -97,8 +85,6 @@ public class EditArticleFragment extends Fragment {
                 serverCommunicationError.printStackTrace();
             }
             iv_image.setImageBitmap(img);
-        }else {
-
         }
 
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +98,7 @@ public class EditArticleFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(getContext())
-                        .setTitle(btn_save.getText())
+                        .setTitle(btn_save.getText().toString())
                         .setMessage("Do you want to save the changes?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
@@ -232,12 +218,12 @@ public class EditArticleFragment extends Fragment {
                 }
             }
             article.setLastUpdate(now);
-            layoutInflater = getActivity().getLayoutInflater();
-            loading =  new AlertDialog.Builder(getActivity())
-                    .setView(layoutInflater.inflate(R.layout.fullscreen_loading_dialog,null))
-                    .setCancelable(false).create();
-            loading.show();
             try {
+                if (btn_save.getText().toString().equals(R.string.create)){
+                    BBDDArticle.insertArticle(article);
+                }else {
+                    BBDDArticle.updateArticulo(article);
+                }
                 newArticleId = new SaveArticleTask().execute(article).get();
                 if (oldArticleId ==-1){
                     article.setId(newArticleId);
@@ -245,7 +231,6 @@ public class EditArticleFragment extends Fragment {
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-            loading.dismiss();
             updateFromTheMainList();
         }else {
             utils.showInfoDialog(getContext(),"Not content to update!");

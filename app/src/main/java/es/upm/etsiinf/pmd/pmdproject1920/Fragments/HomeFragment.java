@@ -127,6 +127,7 @@ public class HomeFragment extends Fragment {
                                 if(!deleteRes){
                                     utils.showInfoDialog(getContext(),"Error deleting article with id: "+articleId);
                                 }else {
+                                    BBDDArticle.deleteArticle(articleId);
                                     articles.remove(position);
                                     adapter.notifyItemRemoved(position);
                                     adapter.notifyItemRangeChanged(position, articles.size());

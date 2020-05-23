@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -124,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
             fb_log_out.setVisibility(View.GONE);
             fb_login.setVisibility(View.VISIBLE);
         }
+        isOpen = true;
+        fb_action.callOnClick();
     }
 
     public void setArticles(List<Article> new_articles){
@@ -154,6 +157,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void sendNotification2(String title, String msg){
+        Notification notification = new NotificationCompat.Builder(this
+                , NotificationHandler.MY_CHANNEL_ID)
+                .setContentTitle(title)
+                .setContentText(msg)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .build();
+
+        notificationHandler.getManager().notify(2,notification);
+
+    }
 
     public void sendNotification () {
         String title = "titulo";

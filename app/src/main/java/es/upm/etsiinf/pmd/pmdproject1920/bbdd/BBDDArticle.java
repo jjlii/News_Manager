@@ -96,7 +96,7 @@ public class BBDDArticle {
     }
 
 
-     public void updateArticulo(Article a) {
+    public static void updateArticulo(Article a) {
          db = helper.getWritableDatabase();
          String where = BBDDVariables.BBDD_ID_ARTICULO + "= ?";
          ContentValues values = new ContentValues();
