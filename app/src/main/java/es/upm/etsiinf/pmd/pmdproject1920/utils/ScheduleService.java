@@ -7,7 +7,15 @@ import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
+import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
+import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
 
 public class ScheduleService extends JobService {
 
@@ -29,10 +37,22 @@ public class ScheduleService extends JobService {
             timeBefore = new Date();
             timeBefore.setTime(timeBefore.getTime()-900000);
         }else {
-
+            timeBefore = new Date(lastPolling);
+            preferences.edit().putLong("last_polling", Calendar.getInstance().getTimeInMillis());
+        }
+        List<Article> result = new ArrayList<Article>();
+        result = ModelManager.getArticlesDate(sdfDate.format(timeBefore));
+        for(Article article:  result){
+            if (BBDDArticle.exist(article.getId())){
+                BBDDArticle.updateArticulo(article);
+                ((MainActivity)getActivity()).sendNotification("El artículo: "+ article.getTitleText() +" ha sido modificado.", article.getSubtitleText());
+            }
+            else{
+                BBDDArticle.insertArticle(article);
+                ((MainActivity)getActivity()).sendNotification("El artículo: "+ article.getTitleText() +" ha sido creado.", article.getSubtitleText());
+            }
 
         }
-
 
         //reprogramar la tarea
         utils.scheduleJob(getApplicationContext());

@@ -95,6 +95,19 @@ public class BBDDArticle {
         return db.delete(BBDDVariables.BBDD_TABLE, BBDDVariables.BBDD_ID_ARTICULO + "=" + id, null) > 0;
     }
 
+    public static boolean exist(Integer id) {
+        db = helper.getReadableDatabase();
+        Cursor cursor= db.rawQuery("SELECT "+ BBDDVariables.BBDD_ID_ARTICULO +" FROM "+BBDDVariables.BBDD_TABLE+" WHERE "+BBDDVariables.BBDD_ID_ARTICULO+"='"+id+"'",null);
+        if (cursor.moveToFirst())
+        {
+            db.close();
+            Log.d("Record  Already Exists", "Table is:"+BBDDVariables.BBDD_TABLE+" ColumnName:"+BBDDVariables.BBDD_ID_ARTICULO);
+            return true;//record Exists
+
+        }
+        Log.d("New Record  ", "Table is:"+BBDDVariables.BBDD_TABLE+" ColumnName:"+BBDDVariables.BBDD_ID_ARTICULO+" Column Value:"+BBDDVariables.BBDD_ID_ARTICULO);
+        return false;
+    }
 
     public static void updateArticulo(Article a) {
          db = helper.getWritableDatabase();

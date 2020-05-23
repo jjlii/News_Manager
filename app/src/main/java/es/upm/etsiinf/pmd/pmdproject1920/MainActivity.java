@@ -169,9 +169,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendNotification () {
-        String title = "titulo";
-        String msg = "mensaje";
+    public void sendNotification (String titulo, String mensaje) {
+        String title = titulo;
+        String msg = mensaje;
         Notification.Builder nb = notificationHandler.createNotification(title, msg);
         notificationHandler.getManager().notify(counter++, nb.build());
         notificationHandler.publishNotificationGroup();

@@ -409,4 +409,43 @@ public class ModelManager {
             throw new ServerCommunicationError(e.getClass() + " ( "+e.getMessage() + ")");
         }
     }
+
+    public static List<Article> getArticlesDate(String date) throws ServerCommunicationError{
+        List<Article> result = new ArrayList<Article>();
+        try{
+            String parameters =  "";
+            String request = rc.serviceUrl + "articlesFrom/" + date;
+
+            URL url = new URL(request);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            if(rc.requireSelfSigned)
+                TrustModifier.relaxHostChecking(connection);
+            //connection.setDoOutput(true);
+            //connection.setDoInput(false);
+            connection.setInstanceFollowRedirects(false);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Authorization", getAuthTokenHeader());
+            connection.setRequestProperty("charset", "utf-8");
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
+            connection.setUseCaches (false);
+
+            int HttpResult =connection.getResponseCode();
+            if(HttpResult ==HttpURLConnection.HTTP_OK){
+                String res = parseHttpStreamResult(connection);
+                List<JSONObject> objects = ServiceCallUtils.readRestResultFromList(res);
+                for (JSONObject jsonObject : objects) {
+                    result.add(new Article(jsonObject));
+                }
+                Logger.log (Logger.INFO, objects.size() + " objects (Article) retrieved");
+            }else{
+                throw new ServerCommunicationError(connection.getResponseMessage());
+            }
+        } catch (Exception e) {
+            Logger.log (Logger.ERROR, "Listing articles :" + e.getClass() + " ( "+e.getMessage() + ")");
+            throw new ServerCommunicationError(e.getClass() + " ( "+e.getMessage() + ")");
+        }
+
+        return result;
+    }
 }
