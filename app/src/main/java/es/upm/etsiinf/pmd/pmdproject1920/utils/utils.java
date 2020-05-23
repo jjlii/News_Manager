@@ -54,8 +54,8 @@ public class utils {
 
         JobInfo.Builder builder = new JobInfo.Builder(SCHEDULE_SERVICE_ID, serviceComponent);
 
-        builder.setMinimumLatency(9000);
-        builder.setOverrideDeadline(9600);
+        builder.setMinimumLatency(60000);
+        builder.setOverrideDeadline(66000);
         builder.setPersisted(true);
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
         jobScheduler.schedule(builder.build());

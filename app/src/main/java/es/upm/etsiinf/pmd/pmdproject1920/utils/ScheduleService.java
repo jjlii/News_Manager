@@ -29,7 +29,7 @@ public class ScheduleService extends JobService {
     private Long lastPolling;
     private Date timeBefore;
     private Date timeAfter;
-    private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd hh:mm:ss";
+    private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd HH:mm:ss";
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -37,12 +37,11 @@ public class ScheduleService extends JobService {
         preferences = getSharedPreferences("PrefsFileDate", Context.MODE_PRIVATE);
         lastPolling = preferences.getLong("last_polling", 0);
         SimpleDateFormat sdfDate = new SimpleDateFormat(DATE_FORMAT_MYSQL);
-
+        timeBefore = new Date();
         if (lastPolling == 0){
-            timeBefore = new Date();
             timeBefore.setTime(timeBefore.getTime()-900000);
         }else {
-            timeBefore = new Date(lastPolling);
+            timeBefore.setTime( lastPolling );
         }
         preferences.edit().putLong("last_polling", new Date().getTime()).apply();
 
