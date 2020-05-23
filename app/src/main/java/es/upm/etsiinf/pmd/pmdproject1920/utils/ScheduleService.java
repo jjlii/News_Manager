@@ -8,14 +8,18 @@ import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.GetArticleDateTask;
 import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
 import es.upm.etsiinf.pmd.pmdproject1920.model.Article;
+import es.upm.etsiinf.pmd.pmdproject1920.utils.network.exceptions.ServerCommunicationError;
 
 public class ScheduleService extends JobService {
 
@@ -38,18 +42,22 @@ public class ScheduleService extends JobService {
             timeBefore.setTime(timeBefore.getTime()-900000);
         }else {
             timeBefore = new Date(lastPolling);
-            preferences.edit().putLong("last_polling", Calendar.getInstance().getTimeInMillis());
+            preferences.edit().putLong("last_polling", Calendar.getInstance().getTimeInMillis()).apply();
         }
         List<Article> result = new ArrayList<Article>();
-        result = ModelManager.getArticlesDate(sdfDate.format(timeBefore));
+        try {
+            result = new GetArticleDateTask().execute(sdfDate.format(timeBefore)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         for(Article article:  result){
             if (BBDDArticle.exist(article.getId())){
                 BBDDArticle.updateArticulo(article);
-                ((MainActivity)getActivity()).sendNotification("El artículo: "+ article.getTitleText() +" ha sido modificado.", article.getSubtitleText());
+                MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido modificado.", article.getSubtitleText());
             }
             else{
                 BBDDArticle.insertArticle(article);
-                ((MainActivity)getActivity()).sendNotification("El artículo: "+ article.getTitleText() +" ha sido creado.", article.getSubtitleText());
+                MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido creado.", article.getSubtitleText());
             }
 
         }

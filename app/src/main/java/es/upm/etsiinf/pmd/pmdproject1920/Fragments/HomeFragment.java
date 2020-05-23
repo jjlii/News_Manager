@@ -106,7 +106,6 @@ public class HomeFragment extends Fragment {
         adapter = new NewsAdapter(articles, getActivity(), new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                ((MainActivity)getActivity()).sendNotification();
                 findNavController(view).navigate(HomeFragmentDirections.actionHomeToArticleDetail(articles.get(position).getId()));
             }
 

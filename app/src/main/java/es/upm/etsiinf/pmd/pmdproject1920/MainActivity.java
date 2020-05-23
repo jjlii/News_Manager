@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     Boolean isOpen = false;
 
-    int counter = 0;
-    private NotificationHandler notificationHandler;
+    static int counter = 0;
+    private static NotificationHandler notificationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendNotification (String titulo, String mensaje) {
+    public static void sendNotification(String titulo, String mensaje) {
         String title = titulo;
         String msg = mensaje;
         Notification.Builder nb = notificationHandler.createNotification(title, msg);
