@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import es.upm.etsiinf.pmd.pmdproject1920.MainActivity;
+import es.upm.etsiinf.pmd.pmdproject1920.Task.AsyncResponse;
 import es.upm.etsiinf.pmd.pmdproject1920.Task.GetArticleDateTask;
 import es.upm.etsiinf.pmd.pmdproject1920.bbdd.BBDDArticle;
 import es.upm.etsiinf.pmd.pmdproject1920.utils.network.ModelManager;
@@ -42,25 +43,26 @@ public class ScheduleService extends JobService {
             timeBefore.setTime(timeBefore.getTime()-900000);
         }else {
             timeBefore = new Date(lastPolling);
-            preferences.edit().putLong("last_polling", Calendar.getInstance().getTimeInMillis()).apply();
         }
-        List<Article> result = new ArrayList<Article>();
-        try {
-            result = new GetArticleDateTask().execute(sdfDate.format(timeBefore)).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        for(Article article:  result){
-            if (BBDDArticle.exist(article.getId())){
-                BBDDArticle.updateArticulo(article);
-                MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido modificado.", article.getSubtitleText());
-            }
-            else{
-                BBDDArticle.insertArticle(article);
-                MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido creado.", article.getSubtitleText());
-            }
+        preferences.edit().putLong("last_polling", new Date().getTime()).apply();
 
-        }
+        new GetArticleDateTask(new AsyncResponse() {
+            @Override
+            public void processFinish(List<Article> articles) {
+                for(Article article:  articles){
+                    if (BBDDArticle.exist(article.getId())){
+                        BBDDArticle.updateArticulo(article);
+                        MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido modificado.", article.getSubtitleText());
+                    }
+                    else{
+                        BBDDArticle.insertArticle(article);
+                        MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido creado.", article.getSubtitleText());
+                    }
+                }
+            }
+        }).execute(sdfDate.format(timeBefore));
+
+
 
         //reprogramar la tarea
         utils.scheduleJob(getApplicationContext());

@@ -11,6 +11,12 @@ import es.upm.etsiinf.pmd.pmdproject1920.utils.utils;
 
 public class GetArticleDateTask extends AsyncTask<String, Void, List<Article>> {
 
+    public AsyncResponse delegate = null;
+
+    public GetArticleDateTask(AsyncResponse delegate){
+        this.delegate =  delegate;
+    }
+
     @Override
     protected List<Article> doInBackground(String... strings) {
         List<Article> res = null;
@@ -21,5 +27,10 @@ public class GetArticleDateTask extends AsyncTask<String, Void, List<Article>> {
             serverCommunicationError.printStackTrace();
         }
         return res;
+    }
+
+    @Override
+    protected void onPostExecute(List<Article> articles) {
+        delegate.processFinish(articles);
     }
 }
