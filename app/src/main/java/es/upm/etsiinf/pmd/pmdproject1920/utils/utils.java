@@ -52,13 +52,14 @@ public class utils {
 
 
 
-        JobInfo.Builder builder = new JobInfo.Builder(SCHEDULE_SERVICE_ID, serviceComponent);
-
-        builder.setMinimumLatency(60000);
-        builder.setOverrideDeadline(66000);
-        builder.setPersisted(true);
+        JobInfo jobInfo = new JobInfo.Builder(SCHEDULE_SERVICE_ID, serviceComponent)
+                .setMinimumLatency(900000)
+                .setOverrideDeadline(960000)
+                .setPersisted(true)
+                .setPeriodic(900000)
+                .build();
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
-        jobScheduler.schedule(builder.build());
+        jobScheduler.schedule(jobInfo);
 
     }
 
