@@ -77,6 +77,7 @@ public class NotificationHandler extends ContextWrapper {
                 .setGroupAlertBehavior(Notification.GROUP_ALERT_CHILDREN)
                 .build();
         getManager().notify(GROUP_ID, groupNotification);
+
     }
 
 

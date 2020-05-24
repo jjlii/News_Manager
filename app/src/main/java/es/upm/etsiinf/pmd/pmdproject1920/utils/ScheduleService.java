@@ -26,27 +26,25 @@ public class ScheduleService extends JobService {
 
     private static String TAG = "ScheduleService";
     private SharedPreferences preferences;
-    private Long lastPolling;
-    private Date timeBefore;
-    private Date timeAfter;
+    private String lastPolling;
     private static final String DATE_FORMAT_MYSQL = "yyyy-MM-dd HH:mm:ss";
 
     @Override
     public boolean onStartJob(JobParameters params) {
         Log.i(TAG, "Job executed !!");
         preferences = getSharedPreferences("PrefsFileDate", Context.MODE_PRIVATE);
-        lastPolling = preferences.getLong("last_polling", 0);
+        lastPolling = preferences.getString("last_polling", null);
         SimpleDateFormat sdfDate = new SimpleDateFormat(DATE_FORMAT_MYSQL);
-        timeBefore = new Date();
-        if (lastPolling == 0){
-            timeBefore.setTime(timeBefore.getTime()-900000);
-        }else {
-            timeBefore.setTime( lastPolling );
+        if (lastPolling == null){
+            //TODO MAl
+            List<Article> articles = BBDDArticle.loadAllArticles();
+            articles =  utils.sortArticlesByDates(articles);
+            lastPolling = SerializationUtils.dateToString(articles.get(0).getLastUpdate());
         }
         new GetArticleDateTask(new AsyncResponse() {
             @Override
             public void processFinish(List<Article> articles) {
-                if(!articles.isEmpty())preferences.edit().putLong("last_polling", articles.get(0).getLastUpdate().getTime()+1000).apply();
+                if(!articles.isEmpty())preferences.edit().putString("last_polling", SerializationUtils.dateToString(articles.get(0).getLastUpdate())).apply();
                 for(Article article:  articles){
                     if (BBDDArticle.exist(article.getId())){
                         BBDDArticle.updateArticulo(article);
@@ -58,7 +56,7 @@ public class ScheduleService extends JobService {
                     }
                 }
             }
-        }).execute(sdfDate.format(timeBefore));
+        }).execute(lastPolling);
         utils.scheduleJob(getApplicationContext());
         return true;
     }
