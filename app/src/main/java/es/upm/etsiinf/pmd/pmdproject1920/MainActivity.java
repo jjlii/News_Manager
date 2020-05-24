@@ -157,18 +157,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void sendNotification2(String title, String msg){
-        Notification notification = new NotificationCompat.Builder(this
-                , NotificationHandler.MY_CHANNEL_ID)
-                .setContentTitle(title)
-                .setContentText(msg)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .build();
-
-        notificationHandler.getManager().notify(2,notification);
-
-    }
-
     public static void sendNotification(String titulo, String mensaje) {
         String title = titulo;
         String msg = mensaje;

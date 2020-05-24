@@ -50,13 +50,10 @@ public class utils {
     public static void scheduleJob(Context context){
         ComponentName serviceComponent = new ComponentName(context, ScheduleService.class);
 
-
-
         JobInfo jobInfo = new JobInfo.Builder(SCHEDULE_SERVICE_ID, serviceComponent)
-                .setMinimumLatency(900000)
-                .setOverrideDeadline(960000)
+                .setMinimumLatency(60000)
+                .setOverrideDeadline(66000)
                 .setPersisted(true)
-                .setPeriodic(900000)
                 .build();
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
         jobScheduler.schedule(jobInfo);

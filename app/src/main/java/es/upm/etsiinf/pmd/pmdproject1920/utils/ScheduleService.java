@@ -43,27 +43,22 @@ public class ScheduleService extends JobService {
         }else {
             timeBefore.setTime( lastPolling );
         }
-        preferences.edit().putLong("last_polling", new Date().getTime()).apply();
-
         new GetArticleDateTask(new AsyncResponse() {
             @Override
             public void processFinish(List<Article> articles) {
+                if(!articles.isEmpty())preferences.edit().putLong("last_polling", articles.get(0).getLastUpdate().getTime()+1000).apply();
                 for(Article article:  articles){
                     if (BBDDArticle.exist(article.getId())){
                         BBDDArticle.updateArticulo(article);
-                        MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido modificado.", article.getSubtitleText());
+                        MainActivity.sendNotification("El artículo: \""+ article.getTitleText() +"\" ha sido modificado.", article.getSubtitleText());
                     }
                     else{
                         BBDDArticle.insertArticle(article);
-                        MainActivity.sendNotification("El artículo: "+ article.getTitleText() +" ha sido creado.", article.getSubtitleText());
+                        MainActivity.sendNotification("El artículo: \""+ article.getTitleText() +"\" ha sido creado.", article.getSubtitleText());
                     }
                 }
             }
         }).execute(sdfDate.format(timeBefore));
-
-
-
-        //reprogramar la tarea
         utils.scheduleJob(getApplicationContext());
         return true;
     }
