@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/home_screen">
+
+    <fragment
+        android:id="@+id/home_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+        <action
+            android:id="@+id/action_home_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
+        <action
+            android:id="@+id/action_home_to_edit_article"
+            app:destination="@id/edit_article_screen"
+            />
+
+        <action
+            android:id="@+id/action_home_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/article_detail_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.ArticleDetailsFragment"
+        tools:layout="@layout/fragment_article_details">
+
+        <argument
+            android:name="articleId"
+            app:argType="integer"
+            app:nullable="false"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/log_in_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.LogInFragment"
+        tools:layout="@layout/fragment_log_in">
+
+        <action
+            android:id="@+id/action_log_in_to_home"
+            app:destination="@id/home_screen"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/economy_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.EconomyFragment"
+        android:label="fragment_economy"
+        tools:layout="@layout/fragment_economy" >
+
+        <action
+            android:id="@+id/action_eco_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+
+        <action
+            android:id="@+id/action_eco_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
+        <action
+            android:id="@+id/action_economy_to_edit_article"
+            app:destination="@id/edit_article_screen"
+            />
+
+        <action
+            android:id="@+id/action_eco_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/sport_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.SportFragment"
+        android:label="fragment_sport"
+        tools:layout="@layout/fragment_sport" >
+
+        <action
+            android:id="@+id/action_sport_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+
+        <action
+            android:id="@+id/action_sport_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
+        <action
+            android:id="@+id/action_sport_to_edit_article"
+            app:destination="@id/edit_article_screen"
+            />
+
+        <action
+            android:id="@+id/action_sport_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/national_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.NationalFragment"
+        android:label="fragment_national"
+        tools:layout="@layout/fragment_national" >
+
+        <action
+            android:id="@+id/action_national_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+
+        <action
+            android:id="@+id/action_national_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
+        <action
+            android:id="@+id/action_national_to_edit_article"
+            app:destination="@id/edit_article_screen"
+            />
+
+        <action
+            android:id="@+id/action_national_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/technology_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.TechnologyFragment"
+        android:label="fragment_technology"
+        tools:layout="@layout/fragment_technology" >
+
+        <action
+            android:id="@+id/action_tech_to_article_detail"
+            app:destination="@id/article_detail_screen"/>
+
+        <action
+            android:id="@+id/action_tech_to_log_in"
+            app:destination="@id/log_in_screen"
+            />
+
+        <action
+            android:id="@+id/action_tech_to_log_out"
+            app:destination="@id/log_out_success_screen"/>
+            
+        <action
+        android:id="@+id/action_technology_to_edit_article"
+        app:destination="@id/edit_article_screen"
+        />
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_article_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.EditArticleFragment"
+        android:label="fragment_edit_article"
+        tools:layout="@layout/fragment_edit_article" >
+
+        <argument
+            android:name="articleId"
+            app:argType="integer"
+            app:nullable="false"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/log_out_success_screen"
+        android:name="es.upm.etsiinf.pmd.pmdproject1920.Fragments.LogOutSuccessFragment"
+        android:label="fragment_log_out_success"
+        tools:layout="@layout/fragment_log_out_success">
+
+        <action
+            android:id="@+id/action_log_out_success_to_home"
+            app:destination="@id/home_screen"/>
+
+    </fragment>
+
+
+</navigation>
